@@ -2,10 +2,11 @@
 
 return [
     'module' => [
+        
         [
-            'title' => 'Quản lý thành viên',
-            'icon' => 'fa fa-user',
-            'name' => 'user',
+            'title' => 'Quản lý bài viết',
+            'icon' => 'fa fa-file',
+            'name' => ['user'],
             'subModule' => [
                 [
                     'title' => 'Quản lý nhóm thành viên',
@@ -17,10 +18,11 @@ return [
                 ]
             ]
         ],
+
         [
             'title' => 'Quản lý bài viết',
             'icon' => 'fa fa-file',
-            'name' => 'post',
+            'name' => ['post'],
             'subModule' => [
                 [
                     'title' => 'Quản lý nhóm bài viết',
@@ -29,6 +31,17 @@ return [
                 [
                     'title' => 'Quản lý bài viết',
                     'route' => 'post/index'
+                ]
+            ]
+        ],
+        [
+            'title' => 'Cấu hình chung',
+            'icon' => 'fa fa-file',
+            'name' => ['language'],
+            'subModule' => [
+                [
+                    'title' => 'Quản lý ngôn ngữ',
+                    'route' => 'language/index'
                 ]
             ]
         ]

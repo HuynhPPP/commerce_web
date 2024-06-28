@@ -137,12 +137,24 @@
                                     <input 
                                         type="text"
                                         name="image"
-                                        value="{{ old('image', ($user->name) ?? '') }}"
-                                        class="form-control input-image"
+                                        value="{{ old('image', ($user->image) ?? '') }}"
+                                        class="form-control upload-image"
                                         placeholder=""
                                         autocomplete="off"
                                         data-upload="Images"
-                                    >
+                                    >                                              
+                                    <span class="image img-cover">
+                                        <img 
+                                            style="
+                                                width:200px;
+                                                border-radius:5px;
+                                                margin-top:20px
+                                                " 
+                                            src="{{ old('image', ($user->image) ?? '') }}" 
+                                            alt=""
+                                        >
+                                    </span>
+                                    
                                 </div>
                             </div>
                         </div>

@@ -2,33 +2,34 @@
     "use strict";
     var HT = {};
 
-    HT.inputImage = () => {
-        $(document).on('click', '.input-image', function(){
-            let _this = $(this)
-            let fileUpload  = _this.attr('data-upload')
-            HT.BrowseServerInput($(this), fileUpload);
+    HT.uploadImageToInput = () => {
+        $('.upload-image').click(function(){
+            let input = $(this)
+            let type = input.attr('data-type')
+            HT.setupCkFinder2(input, type);
         })
     }
 
-   HT.BrowseServerInput = (object, type) => {
-       
+    HT.setupCkFinder2 = (object, type) => {
         if(typeof(type) == 'undefined'){
             type = 'Images';
-        }   
+        }
+            
         var finder = new CKFinder();
         finder.resourceType = type;
-    
         finder.selectActionFunction = function( fileUrl, data ) {
-            console.log(fileUrl)
-            fileUrl = fileUrl.replace(BASE_URL,"/");
-    
-            object.val(fileUrl)
+            const substring = "/public/";
+            const outputString = fileUrl.replace(substring, "");
+            console.log(outputString);
+            object.val(outputString)
         }
+        
         finder.popup();
-   }
-
-
-    $(document).ready(function() {
-        HT.inputImage();
-    })
+        
+    }
+        
+    $(document).ready(function(){
+        HT.uploadImageToInput();
+    });
+        
 })(jQuery);

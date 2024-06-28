@@ -29,7 +29,7 @@ class User extends Authenticatable
         'ward_id',
         'address',
         'birthday',
-        'imgage',
+        'image',
         'description',
         'user_agent',
         'ip',
