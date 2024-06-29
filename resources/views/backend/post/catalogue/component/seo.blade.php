@@ -5,11 +5,14 @@
     <div class="ibox-content">
         <div class="seo-container">
             <div class="meta-title">
-                Giải vô địch bóng đá châu Âu 2024
+                {{ (old('meta_title')) ?? 'Bạn chưa có tiêu đề SEO'}}
             </div>
-            <div class="canonical">https://vi.wikipedia.org/wiki/Euro2024</div>
-            <div class="meta-description">
-                Giải vô địch bóng đá châu Âu 2024 (tiếng Đức: Fußball-Europameisterschaft 2024), thường được gọi là UEFA Euro 2024 (cách điệu thành UEFA EURO 2024) hay đơn giản là Euro 2024, là lần tổ chức thứ 17 của Giải vô địch bóng đá châu Âu...
+            <div class="canonical">
+                {{ (old('canonical')) ? config('app.url').old('canonical').config('apps.general.suffix') 
+                : 'https://duong-dan-cua-ban.html'}}
+            </div>
+            <div class="meta_description">
+                {{ (old('meta_description')) ?? 'Bạn chưa có mô tả SEO'}}
             </div>
         </div>
         <div class="seo-wrapper">
@@ -62,12 +65,10 @@
                         <textarea 
                             type="text"
                             name="meta_description"
-                            value="{{ old('meta_description', ($postCatalogue->meta_description) ?? '' ) }}"
                             class="form-control"
                             placeholder=""
                             autocomplete="off"
-                        >
-                        </textarea>
+                        >{{ old('meta_description', ($postCatalogue->meta_description) ?? '') }}</textarea>
                     </div>
                 </div>
             </div>
@@ -76,18 +77,20 @@
                     <div class="form-row">
                         <label for="" class="control-label text-left">
                             <div class="uk-flex uk-flex-middle uk-flex-space-between">
-                                <span>Đường dẫn</span>
-                                <span class="count_meta-description">0 ký tự</span>
+                                <span>Đường dẫn <span class="text-danger">(*)</span></span>
                             </div>
                         </label>
-                        <input 
-                            type="text"
-                            name="canonical"
-                            value="{{ old('canonical', ($postCatalogue->canonical) ?? '' ) }}"
-                            class="form-control"
-                            placeholder=""
-                            autocomplete="off"
-                        >
+                        <div class="input-wrapper">
+                            <input 
+                                type="text"
+                                name="canonical"
+                                value="{{ old('canonical', ($postCatalogue->canonical) ?? '' ) }}"
+                                class="form-control"
+                                placeholder=""
+                                autocomplete="off"
+                            >
+                            <span class="baseUrl">{{ config('app.url') }}</span>
+                        </div>
                        
                     </div>
                 </div>

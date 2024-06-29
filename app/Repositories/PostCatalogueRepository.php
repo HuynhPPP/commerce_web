@@ -23,4 +23,5 @@ class PostCatalogueRepository extends BaseRepository implements PostCatalogueRep
     }
     
     
+    
 }

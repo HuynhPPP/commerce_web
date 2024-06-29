@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Services\Interfaces\PostCatalogueServiceInterface;
+use App\Services\BaseService;
 use App\Repositories\Interfaces\PostCatalogueRepositoryInterface as PostCatalogueRepository;
 
 use Illuminate\Http\Request;
@@ -17,7 +18,7 @@ use Illuminate\Support\Facades\Auth;
  * Class PostCatalogueService
  * @package App\Services
  */
-class PostCatalogueService implements PostCatalogueServiceInterface
+class PostCatalogueService extends BaseService implements PostCatalogueServiceInterface
 {
     protected $postCatalogueRepository;
     public function __construct(
@@ -44,9 +45,18 @@ class PostCatalogueService implements PostCatalogueServiceInterface
     public function create($request) {
         DB::beginTransaction();
         try {
-            $payload = $request->except(['_token','send']);
+            // Chỉ lấy các dữ liệu muốn lấy
+            $payload = $request->only($this->payload());
             $payload['user_id'] = Auth::id();
             $postCatalogue = $this->postCatalogueRepository->create($payload);
+            if($postCatalogue->id > 0) {
+                $payloadLanguage = $request->only($this->payloadLanguage());
+                $payloadLanguage['language_id'] = $this->currentLanguage();
+                $payloadLanguage['post_catalogue_id'] = $postCatalogue->id;
+                
+                $language = $this->postCatalogueRepository->createLanguagePivot($postCatalogue, $payloadLanguage);
+                dd($language);
+            }
             DB::commit();
             return true;
         }catch (\Exception $e) {
@@ -143,15 +153,38 @@ class PostCatalogueService implements PostCatalogueServiceInterface
     // }
        
 
-    private function paginateSelect()
-    {
-        return [
-            'id', 
-            'name', 
-            'canonical',
-            'publish',
-            'image'
-           
-        ];
-    }
+        private function paginateSelect()
+        {
+            return [
+                'id', 
+                'name', 
+                'canonical',
+                'publish',
+                'image'
+            
+            ];
+        }
+
+        private function payload()
+        {
+            return [
+                'parent_id',
+                'follow', 
+                'publish',
+                'image'
+            ];
+        }
+
+        private function payloadLanguage()
+        {
+            return [
+                'name', 
+                'description', 
+                'content', 
+                'meta_title', 
+                'meta_keyword', 
+                'meta_description',
+                'canonical'
+            ];
+        }
 }

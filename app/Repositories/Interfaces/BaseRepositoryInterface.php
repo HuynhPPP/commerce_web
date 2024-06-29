@@ -22,4 +22,5 @@ interface BaseRepositoryInterface
         array $relation = []
     );
     public function updateByWhereIn($whereInField = '', array $whereIn = [], array $payload = []);
+    public function createLanguagePivot($model, array $payload = []);
 }

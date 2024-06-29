@@ -29,49 +29,11 @@
             </div>
 
             <div class="col-lg-3">
-                <div class="ibox">
-                    <div class="ibox-content">
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <div class="form-row">
-                                    <label for="" class="control-label text-left">Chọn danh mục cha
-                                    <span class="text-danger">(*)</span></label>
-                                    <span class="text-danger notice">*Chọn Root nếu không có danh mục cha</span></label>
-                                    <select
-                                        class="form-control setupSelect2"
-                                        name="" 
-                                        id=""
-                                    >
-                                        <option value="0">Chọn danh mục cha</option>
-                                        <option value="1">Root</option>
-                                        <option value="2">Bóng đá</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>  
-                    </div>
-                </div>
-                <div class="ibox">
-                    <div class="ibox-title">
-                        <h5>Chọn ảnh đại diện</h5>
-                    </div>
-                    <div class="ibox-content">
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <div class="form-row">
-                                    <div class="image img-cover">
-                                        <img src="backend/img/no-image.png" alt="">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>  
-                    </div>
-                </div>
+                @include('backend.post.catalogue.component.aside')
             </div>
         </div>
-        <hr>
-       
-        <div class="text-right">
+         
+        <div class="text-right mb15 button-fix">
             <button 
                 class="btn btn-primary"
                 type="submit"
