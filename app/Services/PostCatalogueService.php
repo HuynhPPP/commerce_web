@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use App\Classes\Nestedsetbie;
 
 
 /**
@@ -21,11 +22,16 @@ use Illuminate\Support\Facades\Auth;
 class PostCatalogueService extends BaseService implements PostCatalogueServiceInterface
 {
     protected $postCatalogueRepository;
+    protected $nestedset;
     public function __construct(
         PostCatalogueRepository $postCatalogueRepository,
-       
     ){
         $this->postCatalogueRepository = $postCatalogueRepository;
+        $this->nestedset = new Nestedsetbie([
+            'table' => 'post_catalogues',
+            'foreignkey' => 'post_catalogue_id',
+            'language_id' => $this->currentLanguage(),
+        ]);
     }
 
     public function paginate($request) 
@@ -52,11 +58,14 @@ class PostCatalogueService extends BaseService implements PostCatalogueServiceIn
             if($postCatalogue->id > 0) {
                 $payloadLanguage = $request->only($this->payloadLanguage());
                 $payloadLanguage['language_id'] = $this->currentLanguage();
-                $payloadLanguage['post_catalogue_id'] = $postCatalogue->id;
-                
+                $payloadLanguage['post_catalogue_id'] = $postCatalogue->id; 
                 $language = $this->postCatalogueRepository->createLanguagePivot($postCatalogue, $payloadLanguage);
-                dd($language);
             }
+            $this->nestedset->Get('level ASC, order ASC');
+            $this->nestedset->Recursive(0, $this->nestedset->Set());
+            $this->nestedset->Action();
+
+
             DB::commit();
             return true;
         }catch (\Exception $e) {

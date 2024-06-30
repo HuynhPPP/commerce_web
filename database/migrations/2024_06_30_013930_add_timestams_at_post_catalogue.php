@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('post_catalogue_language', function (Blueprint $table) {
-            $table->string('canonical')->unique();
+            $table->timestamps();
         });
     }
 
@@ -22,7 +22,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('post_catalogue_language', function (Blueprint $table) {
-            $table->dropTimestamps();
+            
         });
     }
 };

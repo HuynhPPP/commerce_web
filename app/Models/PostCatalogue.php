@@ -11,7 +11,7 @@ class PostCatalogue extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'parentid'.
+        'parent_id',
         'lft',
         'rgt',
         'level',

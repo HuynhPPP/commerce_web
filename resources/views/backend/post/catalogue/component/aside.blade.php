@@ -6,14 +6,10 @@
                     <label for="" class="control-label text-left">Chọn danh mục cha
                     <span class="text-danger">(*)</span></label>
                     <span class="text-danger notice">*Chọn Root nếu không có danh mục cha</span></label>
-                    <select
-                        class="form-control setupSelect2"
-                        name="parent_id" 
-                        id=""
-                    >
-                        <option value="0">Chọn danh mục cha</option>
-                        <option value="1">Root</option>
-                        <option value="2">Bóng đá</option>
+                    <select class="form-control setupSelect2" name="parent_id" id="">
+                        @foreach($dropdown as $key => $val)
+                        <option value="{{ $key }}">{{ $val }}</option>
+                        @endforeach
                     </select>
                 </div>
             </div>
