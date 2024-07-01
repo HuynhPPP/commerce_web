@@ -33,7 +33,7 @@ class StorePostCatalogueRequest extends FormRequest
         return [
             'name.required' => 'Bạn chưa nhập ô tiêu đề nhóm bài viết !',
             'canonical.required' => 'Bạn chưa nhập ô đường dẫn !',
-             'canonical.unique' => 'Đường dẫn đã tồn tại ! Vui lòng chọn từ khoá khác.'
+            'canonical.unique' => 'Đường dẫn đã tồn tại ! Vui lòng chọn đường dẫn khác.'
            
         ];
     }

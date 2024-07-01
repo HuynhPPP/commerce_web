@@ -20,8 +20,11 @@ class PostCatalogue extends Model
         'album',
         'publish',
         'order',
-        'user_id',  
+        'user_id',
+        'follow',  
     ];
+
+    protected $table = 'post_catalogues';
 
     public function languages()
     {
@@ -36,5 +39,19 @@ class PostCatalogue extends Model
                 'description',
                 'content'
             )->withTimestamps();
+    }
+
+    public function post_catalogue_language(){
+        return $this->hasMany(PostCatalogueLanguage::class, 'post_catalogue_id', 'id');
+    }
+
+    public static function isNodeCheck($id = 0){
+        $postCatalogue = PostCatalogue::find($id);
+
+        if($postCatalogue->rgt - $postCatalogue->lft !== 1){
+            return false;
+        }
+
+        return true;
     }
 }

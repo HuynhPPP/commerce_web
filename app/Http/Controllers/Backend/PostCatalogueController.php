@@ -9,12 +9,14 @@ use App\Services\Interfaces\PostCatalogueServiceInterface as PostCatalogueServic
 use App\Repositories\Interfaces\PostCatalogueRepositoryInterface as PostCatalogueRepository;
 use App\Http\Requests\StorePostCatalogueRequest;
 use App\Http\Requests\UpdatePostCatalogueRequest;
+use App\Http\Requests\DeletePostCatalogueRequest;
 use App\Classes\Nestedsetbie;
 
 class PostCatalogueController extends Controller
 {
     protected $postCatalogueService;
     protected $postCatalogueRepository;
+    protected $language;
     public function __construct(
         PostCatalogueService $postCatalogueService,
         PostCatalogueRepository $postCatalogueRepository
@@ -27,6 +29,7 @@ class PostCatalogueController extends Controller
             'foreignkey' => 'post_catalogue_id',
             'language_id' => 1,
         ]);
+        $this->language = $this->currentLanguage();
     }
 
     public function index(Request $request)
@@ -78,17 +81,19 @@ class PostCatalogueController extends Controller
 
     public function edit($id)
     {
-       
-        $postCatalogue = $this->postCatalogueService->findById($id);
+        $postCatalogue = $this->postCatalogueRepository->getPostCatalogueById($id, 
+        $this->language);
+
         $config = $this->configData();
         $template = 'backend.post.catalogue.store';
-        
+        $dropdown = $this->nestedset->Dropdown();
         $config['seo'] = config('apps.postcatalogue');
         $config['method'] = 'edit';
         return view('backend.dashboard.layout', compact(
             'template',
             'config',
-            'postCatalogue'
+            'postCatalogue',
+            'dropdown'
             
         ));
     }
@@ -106,7 +111,8 @@ class PostCatalogueController extends Controller
     public function delete($id)
     {
         $config['seo'] = config('apps.postcatalogue');
-        $postCatalogue = $this->postCatalogueService->findById($id);
+        $postCatalogue = $this->postCatalogueRepository->getPostCatalogueById($id, 
+        $this->language);
         $template = 'backend.post.catalogue.delete';
         return view('backend.dashboard.layout', compact(
             'template',
@@ -116,10 +122,9 @@ class PostCatalogueController extends Controller
         ));
     }
 
-    public function destroy($id) 
+    public function destroy($id, DeletePostCatalogueRequest $request) 
     {
         if($this->postCatalogueService->destroy($id)){
-      
             return redirect()->route('post.catalogue.index');
         }
         

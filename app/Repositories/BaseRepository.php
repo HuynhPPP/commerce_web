@@ -30,7 +30,8 @@ class BaseRepository implements BaseRepositoryInterface
         array $join = [],
         array $extend = [],
         int $perpage = 1,
-        array $relations = []
+        array $relations = [],
+        array $orderBy = ['id', 'DESC'],
        
     ){
         $query = $this->model->select($column)->where(function($query) use ($condition){
@@ -41,8 +42,15 @@ class BaseRepository implements BaseRepositoryInterface
             if(isset($condition['publish']) && $condition['publish'] !=0){
                 $query->where('publish', '=', $condition['publish']);
             }
-            return $query;
 
+            if(isset($condition['where']) && count($condition['where'])){
+                foreach($condition['where'] as $key => $val){
+                    $query->where($val[0], $val[1], $val[2]);
+                }
+            } 
+
+
+            return $query;
         });
 
         if(isset($relations) && !empty($relations)){
@@ -51,8 +59,14 @@ class BaseRepository implements BaseRepositoryInterface
             }
         }
 
-        if(!empty($join)){
-            $query->join(...$join);
+        if(isset($join) && is_array($join) && count($join)){
+            foreach($join as $key => $val){
+                $query->join($val[0], $val[1], $val[2], $val[3]);
+            }
+        }
+
+        if(isset($orderBy) && !empty($orderBy)){
+            $query->orderBy($orderBy[0], $orderBy[1]);
         }
 
         return $query->paginate($perpage)

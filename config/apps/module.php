@@ -4,8 +4,8 @@ return [
     'module' => [
         
         [
-            'title' => 'Quản lý bài viết',
-            'icon' => 'fa fa-file',
+            'title' => 'Quản lý thành viên',
+            'icon' => 'fa fa-user',
             'name' => ['user'],
             'subModule' => [
                 [
@@ -36,7 +36,7 @@ return [
         ],
         [
             'title' => 'Cấu hình chung',
-            'icon' => 'fa fa-file',
+            'icon' => 'fa fa-language',
             'name' => ['language'],
             'subModule' => [
                 [

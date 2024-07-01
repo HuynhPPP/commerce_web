@@ -1,15 +1,12 @@
 <table class="table table-striped table-bordered">
     <thead>
     <tr>
-        <th>
+        <th style="width: 50px;">
             <input type="checkbox" id="checkAll" value="checkAll" class="input-checkbox">
         </th>
-        <th style="width:100px">Ảnh</th>
-        <th>Tên ngôn ngữ</th>
-        <th>Canonical</th>
-        <th>Mô tả</th>
-        <th class="text-center">Tình trạng</th>
-        <th class="text-center">Thao tác</th>
+        <th>Tên nhóm</th>
+        <th class="text-center" style="width: 100px;">Tình trạng</th>
+        <th class="text-center" style="width: 100px;">Thao tác</th>
     </tr>
     </thead>
     <tbody>
@@ -21,21 +18,8 @@
         </td>
 
         <td>
-            <span class="image img-cover">
-                <img src="{{ $postCatalogue->image }}" alt="">
-            </span>
-        </td>
-        
-        <td>
-            {{$postCatalogue->name}}
-        </td>
-
-        <td>
-            {{$postCatalogue->canonical}}
-        </td>
-
-        <td>
-            {{$postCatalogue->description}}
+            {{ str_repeat('|-----', (($postCatalogue->level > 0)?
+            ($postCatalogue->level - 1):0)).$postCatalogue->name }}
         </td>
         
         <td class="text-center js-switch-{{$postCatalogue->id}}">

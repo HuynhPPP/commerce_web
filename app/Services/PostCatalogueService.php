@@ -23,14 +23,16 @@ class PostCatalogueService extends BaseService implements PostCatalogueServiceIn
 {
     protected $postCatalogueRepository;
     protected $nestedset;
+    protected $language;
     public function __construct(
         PostCatalogueRepository $postCatalogueRepository,
     ){
+        $this->language =$this->currentLanguage();
         $this->postCatalogueRepository = $postCatalogueRepository;
         $this->nestedset = new Nestedsetbie([
             'table' => 'post_catalogues',
             'foreignkey' => 'post_catalogue_id',
-            'language_id' => $this->currentLanguage(),
+            'language_id' => $this->language,
         ]);
     }
 
@@ -39,11 +41,25 @@ class PostCatalogueService extends BaseService implements PostCatalogueServiceIn
        
         $condition['keyword'] = addslashes($request->input('keyword'));
         $condition['publish'] = $request->integer('publish');
+        $condition['where'] = [
+            ['tb2.language_id', '=', $this->language]
+        ];
         $perpage = $request->integer('perpage');
         $postCatalogues = $this->postCatalogueRepository->pagination(
-                $this->paginateSelect(), $condition, [], ['path' => 'language/index'], 
-                $perpage, []
+                $this->paginateSelect(), 
+                $condition, 
+                [
+                    ['post_catalogue_language as tb2', 'tb2.post_catalogue_id', '=' , 'post_catalogues.id']
+                ], 
+                ['path' => 'post/catalogue/index'], 
+                $perpage, 
+                [],
+                [
+                    'post_catalogues.lft', 'ASC',
+                ]
+                
         );
+        
         
         return $postCatalogues;
     }
@@ -78,9 +94,20 @@ class PostCatalogueService extends BaseService implements PostCatalogueServiceIn
     public function update($id, $request) {
         DB::beginTransaction();
         try {
-           
-            $payload = $request->except(['_token','send']);
-            $postCatalogue = $this->postCatalogueRepository->update($id, $payload);
+            $postCatalogue = $this->postCatalogueRepository->findById($id);
+            $payload = $request->only($this->payload());
+            $flag = $this->postCatalogueRepository->update($id, $payload);
+            if($flag == TRUE){
+                $payloadLanguage = $request->only($this->payloadLanguage());
+                $payloadLanguage['language_id'] = $this->currentLanguage();
+                $payloadLanguage['post_catalogue_id'] = $id; 
+                $postCatalogue->languages()->detach([$payloadLanguage['language_id'], $id]);
+                $response = $this->postCatalogueRepository->createLanguagePivot($postCatalogue, $payloadLanguage);
+                $this->nestedset->Get('level ASC, order ASC');
+                $this->nestedset->Recursive(0, $this->nestedset->Set());
+                $this->nestedset->Action();
+            }
+
             DB::commit();
             return true;
         }catch (\Exception $e) {
@@ -94,7 +121,11 @@ class PostCatalogueService extends BaseService implements PostCatalogueServiceIn
     {
         DB::beginTransaction();
         try {
-            $postCatalogue = $this->postCatalogueRepository->forceDelete($id);
+            $postCatalogue = $this->postCatalogueRepository->delete($id);
+            $this->nestedset->Get('level ASC, order ASC');
+            $this->nestedset->Recursive(0, $this->nestedset->Set());
+            $this->nestedset->Action();
+
             DB::commit();
             return true;
         }catch (\Exception $e) {
@@ -165,12 +196,13 @@ class PostCatalogueService extends BaseService implements PostCatalogueServiceIn
         private function paginateSelect()
         {
             return [
-                'id', 
-                'name', 
-                'canonical',
-                'publish',
-                'image'
-            
+                'post_catalogues.id', 
+                'post_catalogues.publish',
+                'post_catalogues.image',
+                'post_catalogues.level',
+                'post_catalogues.order',
+                'tb2.name', 
+                'tb2.canonical',
             ];
         }
 
