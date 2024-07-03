@@ -14,6 +14,23 @@
         }
     }
 
+    HT.uploadAlbum = () => {
+        $(document).on('click', '.upload-picture', function(e) {
+            HT.browseServerAlbum();
+            e.preventDefault();
+        })
+    }
+
+    HT.multipleUploadImageCkeditor = () => {
+        $(document).on('click', '.multipleUploadImageCkeditor', function(e){
+            let object = $(this)
+            let target = object.attr('data-target')
+            HT.browseServerCkeditor(object, 'Images', target);
+
+            e.preventDefault()
+        })
+    }
+
     HT.ckeditor4 = (elementId, elementHeight) => {
         if(typeof(elementHeight) == 'undefined'){
             elementHeight = 500;
@@ -65,10 +82,9 @@
         var finder = new CKFinder();
         finder.resourceType = type;
         finder.selectActionFunction = function( fileUrl, data ) {
-            const substring = "public/";
-            const outputString = fileUrl.replace(substring, "");
-            console.log(outputString);
-            object.val(outputString)
+            const substring = 'http://localhost/commerce_web/public/' + fileUrl;
+            console.log(substring);
+            object.val(substring)
         }
         
         finder.popup();
@@ -92,11 +108,72 @@
         
         finder.popup();
     }
+
+    HT.browseServerCkeditor = (object, type, target) => {
+        if(typeof(type) == 'undefined'){
+            type = 'Images';
+        }
+            
+        var finder = new CKFinder();
+        finder.resourceType = type;
+        finder.selectActionFunction = function( fileUrl, data, allFiles ) {
+            console.log(allFiles);
+            for(var i = 0; i < allFiles.length; i++) {
+                var image = allFiles[i].url
+                CKEDITOR.instances[target].insertHtml('<p><img src="'+image+'" /></p>')
+            }
+        }
+        
+        finder.popup();
+    }
+
+    HT.browseServerAlbum = () => {   
+        var type = 'Images';     
+        var finder = new CKFinder();
+
+        finder.resourceType = type;
+        finder.selectActionFunction = function( fileUrl, data, allFiles ) {
+            let html = '';
+            for(var i = 0; i < allFiles.length; i++) {
+                var image = allFiles[i].url
+                html += '<li class="ui-state-default">'                       
+                    html += '<div class="thumb">'
+                        html += '<span class="span image img-scaledown">'
+                            html += '<img src="'+image+'" alt="'+image+'">'
+                            html += '<input type="hidden" name="album[]" value="'+image+'">'
+                        html += '</span>'
+                        html += '<button class="delete-image">'
+                            html += '<i class="fa fa-trash"></i>'
+                        html += '</button>'
+                    html += '</div>'
+                html += '</li>'
+            }
+            $('.click-to-upload').addClass('hidden')
+            $('#sortable').append(html)
+            $('.upload-list').removeClass('hidden')
+        }
+        
+        finder.popup();
+    }
+
+    HT.deletePicture = () => {
+        $(document).on('click', '.delete-image', function(){
+            let _this = $(this)
+            _this.parents('.ui-state-default').remove()
+            if($('.ui-state-default').length == 0){
+                $('.click-to-upload').removeClass('hidden')
+                $('.upload-list').addClass('hidden')
+            }
+        })
+    }
         
     $(document).ready(function(){
         HT.uploadImageToInput();
         HT.setupCkeditor();
         HT.uploadImageAvatar();
+        HT.multipleUploadImageCkeditor();
+        HT.uploadAlbum();
+        HT.deletePicture();
     });
         
 })(jQuery);

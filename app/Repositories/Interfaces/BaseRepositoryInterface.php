@@ -16,11 +16,11 @@ interface BaseRepositoryInterface
     public function pagination(
         array $column = ['*'], 
         array $condition = [],
-        array $join = [],
-        array $extend = [],
         int $perpage = 1,
-        array $relation = [],
-        array $orderBy = [],
+        array $extend = [],
+        array $orderBy = ['id', 'DESC'],
+        array $join = [],
+        array $relations = [],  
     );
     public function updateByWhereIn($whereInField = '', array $whereIn = [], array $payload = []);
     public function createLanguagePivot($model, array $payload = []);

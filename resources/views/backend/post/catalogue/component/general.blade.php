@@ -14,7 +14,7 @@
         </div>
     </div>
 </div>
-<div class="row mb15">
+<div class="row mb30">
     <div class="col-lg-12">
         <div class="form-row">
             <label for="" class="control-label text-left mb15">Mô tả ngắn
@@ -32,10 +32,14 @@
         </div>
     </div>
 </div>
-<div class="row mb15">
+<div class="row">
     <div class="col-lg-12">
         <div class="form-row">
-            <label for="" class="control-label text-left mb15">Nội dung
+            <div class="uk-flex uk-flex-middle uk-flex-space-between">
+                <label for="" class="control-label text-left mb15">Nội dung </label>
+                <a href="" class="multipleUploadImageCkeditor" data-target="ckContent">Upload nhiều hình ảnh</a>
+            </div>
+            
             <textarea 
                 type="text"
                 name="content"

@@ -35,7 +35,7 @@
         str = str.replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g, "u");
         str = str.replace(/ỳ|ý|ỵ|ỷ|ỹ/g, "y");
         str = str.replace(/đ/g, "d");
-        str = str.replace(/[!@%^*()+=<>?1,]/g, ""); // Thay thế các ký tự đặc biệt
+        str = str.replace(/[!@%^*()+=<>?,]/g, ""); // Thay thế các ký tự đặc biệt
         str = str.replace(/-+/g, "-"); // Loại bỏ dấu gạch ngang liên tiếp
         str = str.replace(/\s+/g, "-"); // Thay thế khoảng trắng bằng dấu gạch ngang
         str = str.replace(/^-+|-+$/g, ""); // Loại bỏ dấu gạch ngang ở đầu và cuối chuỗi

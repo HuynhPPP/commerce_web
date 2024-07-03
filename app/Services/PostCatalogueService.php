@@ -13,6 +13,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use App\Classes\Nestedsetbie;
+use Illuminate\Support\Str;
 
 
 /**
@@ -48,16 +49,12 @@ class PostCatalogueService extends BaseService implements PostCatalogueServiceIn
         $postCatalogues = $this->postCatalogueRepository->pagination(
                 $this->paginateSelect(), 
                 $condition, 
+                $perpage, 
+                ['path' => 'post/catalogue/index'],
+                ['post_catalogues.lft', 'ASC',],
                 [
                     ['post_catalogue_language as tb2', 'tb2.post_catalogue_id', '=' , 'post_catalogues.id']
-                ], 
-                ['path' => 'post/catalogue/index'], 
-                $perpage, 
-                [],
-                [
-                    'post_catalogues.lft', 'ASC',
-                ]
-                
+                ],
         );
         
         
@@ -70,9 +67,12 @@ class PostCatalogueService extends BaseService implements PostCatalogueServiceIn
             // Chỉ lấy các dữ liệu muốn lấy
             $payload = $request->only($this->payload());
             $payload['user_id'] = Auth::id();
+            $payload['album'] = json_encode($payload['album']);
+            dd($payload);
             $postCatalogue = $this->postCatalogueRepository->create($payload);
             if($postCatalogue->id > 0) {
                 $payloadLanguage = $request->only($this->payloadLanguage());
+                $payloadLanguage['canonical'] = Str::slug($payloadLanguage['canonical']);
                 $payloadLanguage['language_id'] = $this->currentLanguage();
                 $payloadLanguage['post_catalogue_id'] = $postCatalogue->id; 
                 $language = $this->postCatalogueRepository->createLanguagePivot($postCatalogue, $payloadLanguage);
@@ -96,6 +96,7 @@ class PostCatalogueService extends BaseService implements PostCatalogueServiceIn
         try {
             $postCatalogue = $this->postCatalogueRepository->findById($id);
             $payload = $request->only($this->payload());
+            $payload['album'] = json_encode($payload['album']);
             $flag = $this->postCatalogueRepository->update($id, $payload);
             if($flag == TRUE){
                 $payloadLanguage = $request->only($this->payloadLanguage());
@@ -171,28 +172,7 @@ class PostCatalogueService extends BaseService implements PostCatalogueServiceIn
        
     }
 
-    // private function changeUserStatus($post, $value)
-    // {   
-    //     DB::beginTransaction();
-    //     try {
-    //         $array = [];
-    //         if(isset($post['modelId'])){
-    //             $array[] = $post['modelId'];
-    //         }else{
-    //             $array = $post['id'];
-    //         }
-    //         $payload[$post['field']] = $value;
-    //         $this->userRepository->updateByWhereIn('user_catalogue_id', $array, $payload);
-    //         DB::commit();
-    //         return true;
-    //     }catch (\Exception $e) {
-    //         DB::rollback();
-    //         echo $e->getMessage();die();
-    //         return false;
-    //     }
-    // }
        
-
         private function paginateSelect()
         {
             return [
@@ -212,7 +192,8 @@ class PostCatalogueService extends BaseService implements PostCatalogueServiceIn
                 'parent_id',
                 'follow', 
                 'publish',
-                'image'
+                'image',
+                'album',
             ];
         }
 
@@ -227,5 +208,6 @@ class PostCatalogueService extends BaseService implements PostCatalogueServiceIn
                 'meta_description',
                 'canonical'
             ];
+            
         }
 }
