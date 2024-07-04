@@ -2,17 +2,17 @@
 
 return [
     'index' => [
-        'title' => 'Quản lí bài viết',
-        'table' => 'Danh sách bài viết',
+        'title' => 'Quản lí nhóm bài viết',
+        'table' => 'Danh sách nhóm bài viết',
     ],
     'create' => [
-        'title' => 'Thêm mới bài viết',
+        'title' => 'Thêm mới nhóm bài viết',
     ],
     'edit' => [
-        'title' => 'Cập nhật bài viết',
+        'title' => 'Cập nhật nhóm bài viết',
     ],
     'delete' => [
-        'title' => 'Xoá bài viết',
+        'title' => 'Xoá bài nhóm viết',
     ]
     
 ];

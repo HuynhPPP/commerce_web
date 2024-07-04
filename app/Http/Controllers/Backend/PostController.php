@@ -5,25 +5,24 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-use App\Services\Interfaces\PostCatalogueServiceInterface as PostCatalogueService;
-use App\Repositories\Interfaces\PostCatalogueRepositoryInterface as PostCatalogueRepository;
-use App\Http\Requests\StorePostCatalogueRequest;
-use App\Http\Requests\UpdatePostCatalogueRequest;
-use App\Http\Requests\DeletePostCatalogueRequest;
+use App\Services\Interfaces\PostServiceInterface as PostService;
+use App\Repositories\Interfaces\PostRepositoryInterface as PostRepository;
+use App\Http\Requests\StorePostRequest;
+use App\Http\Requests\UpdatePostRequest;
+use App\Http\Requests\DeletePostRequest;
 use App\Classes\Nestedsetbie;
 
-class PostCatalogueController extends Controller
+class PostController extends Controller
 {
-    protected $postCatalogueService;
-    protected $postCatalogueRepository;
+    protected $postService;
+    protected $postRepository;
     protected $language;
     public function __construct(
-        PostCatalogueService $postCatalogueService,
-        PostCatalogueRepository $postCatalogueRepository
+        PostService $postService,
+        PostRepository $postRepository
     ){
-        $this->postCatalogueService = $postCatalogueService;
-        $this->postCatalogueRepository = $postCatalogueRepository;
-        $this->postCatalogueRepository = $postCatalogueRepository;
+        $this->postService = $postService;
+        $this->postRepository = $postRepository;
         $this->nestedset = new Nestedsetbie([
             'table' => 'post_catalogues',
             'foreignkey' => 'post_catalogue_id',
@@ -34,7 +33,7 @@ class PostCatalogueController extends Controller
 
     public function index(Request $request)
     {
-        $postCatalogues = $this->postCatalogueService->paginate($request);
+        $posts = $this->postService->paginate($request);
 
 
         $config = [
@@ -47,23 +46,23 @@ class PostCatalogueController extends Controller
                 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css'
             ]
         ];
-        $config['seo'] = config('apps.postcatalogue');
-        $template = 'backend.post.catalogue.index';
+        $config['seo'] = config('apps.post');
+        $template = 'backend.post.post.index';
         return view('backend.dashboard.layout', compact(
             'template',
             'config',
-            'postCatalogues',
+            'posts',
         ));
     }
 
     public function create() {    
         
         $config = $this->configData();
-        $config['seo'] = config('apps.postcatalogue');
+        $config['seo'] = config('apps.post');
         $dropdown = $this->nestedset->Dropdown();
         $config['method'] = 'create';
         
-        $template = 'backend.post.catalogue.store';
+        $template = 'backend.post.post.store';
         return view('backend.dashboard.layout', compact(
             'template',
             'config',
@@ -72,66 +71,66 @@ class PostCatalogueController extends Controller
         ));
     }
 
-    public function store(StorePostCatalogueRequest $request){
-        if($this->postCatalogueService->create($request)){
+    public function store(StorePostRequest $request){
+        if($this->postService->create($request)){
       
-            return redirect()->route('post.catalogue.index');
+            return redirect()->route('post.index');
         }
         
-        return redirect()->route('post.catalogue.index');
+        return redirect()->route('post.index');
     }
 
     public function edit($id)
     {
-        $postCatalogue = $this->postCatalogueRepository->getPostCatalogueById($id, 
+        $post = $this->postCatalogueRepository->getPostCatalogueById($id, 
         $this->language);
 
         $config = $this->configData();
-        $template = 'backend.post.catalogue.store';
+        $template = 'backend.post.post.store';
         $dropdown = $this->nestedset->Dropdown();
-        $config['seo'] = config('apps.postcatalogue');
+        $config['seo'] = config('apps.post');
         $config['method'] = 'edit';
-        $album = json_decode($postCatalogue->album);
+        $album = json_decode($post->album);
         return view('backend.dashboard.layout', compact(
             'template',
             'config',
-            'postCatalogue',
+            'post',
             'dropdown',
             'album'
         ));
     }
 
-    public function update($id, UpdatePostCatalogueRequest $request)
+    public function update($id, UpdatePostRequest $request)
     {
-        if($this->postCatalogueService->update($id, $request)){
+        if($this->postService->update($id, $request)){
       
-            return redirect()->route('post.catalogue.index');
+            return redirect()->route('post.index');
         }
         
-        return redirect()->route('post.catalogue.index');
+        return redirect()->route('post.index');
     }
 
     public function delete($id)
     {
-        $config['seo'] = config('apps.postcatalogue');
-        $postCatalogue = $this->postCatalogueRepository->getPostCatalogueById($id, 
+        $config['seo'] = config('apps.post');
+        $post = $this->postCatalogueRepository->getPostCatalogueById($id, 
         $this->language);
-        $template = 'backend.post.catalogue.delete';
+        $template = 'backend.post.post.post.delete';
         return view('backend.dashboard.layout', compact(
             'template',
-            'postCatalogue',
+            'post',
             'config'
             
         ));
     }
 
-    public function destroy($id, DeletePostCatalogueRequest $request) 
+    public function destroy($id, DeletePostRequest $request) 
     {
-        if($this->postCatalogueService->destroy($id)){
-            return redirect()->route('post.catalogue.index');
+        if($this->postService->destroy($id)){
+            return redirect()->route('post.index');
         }
         
-        return redirect()->route('post.catalogue.index');
+        return redirect()->route('post.index');
     }
 
     private function configData(){

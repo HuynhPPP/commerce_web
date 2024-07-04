@@ -7,9 +7,12 @@
             </div>
         </div>
         <div class="ibox-content">
+            @php
+              $gallery = (isset($album) && count($album) ) ? $album : old('album');  
+            @endphp
             <div class="row">
                 <div class="col-lg-12">
-                    @if(!isset($album) || count($album) == 0)
+                    @if(!isset($gallery) || count($gallery) == 0)
                     <div class="click-to-upload">
                         <div class="icon">
                             <a href="" class="upload-picture">
@@ -43,26 +46,25 @@
                         <div class="small-text">Sử dụng nút chọn hình hoặc click vào đây để thêm hình ảnh</div>
                     </div>
                     @endif
-
-                    @if(isset($album) && count($album))
-                    <div class="upload-list {{ (count($album)) ? '' : 'hidden' }}">
+                    
+                    <div class="upload-list {{ (isset($gallery) && count($gallery)) ? '' : 'hidden' }}">
                         <ul id="sortable" class="clearfix data-album sortui ui-sortable">
-                            @foreach($album as $key => $val)
-                            <li class="ui-state-default">                       
-                                <div class="thumb">
-                                    <span class="span image img-scaledown">
-                                        <img src="'{{$val}}'" alt="{{$val}}">
-                                        <input type="hidden" name="album[]" value="{{$val}}">
-                                    </span>
-                                    <button class="delete-image">
-                                        <i class="fa fa-trash"></i>
-                                    </button>
-                                </div>
-                            </li>
-                            @endforeach
+                            @if(isset($gallery) && count($gallery))
+                                @foreach($gallery as $key => $val)
+                                    <li class="ui-state-default">                       
+                                        <div class="thumb">
+                                            <span class="span image img-scaledown">
+                                                <img src="{{ $val }}" alt="{{ $val }}">
+                                                <input type="hidden" name="album[]" value="{{ $val }}">
+                                            </span>
+                                            <button class="delete-image"><i class="fa fa-trash"></i></button>
+                                        </div>
+                                    </li>
+                                @endforeach
+                            @endif
                         </ul>
-                        @endif
                     </div>
+                 
                 </div>
             </div>
         </div>

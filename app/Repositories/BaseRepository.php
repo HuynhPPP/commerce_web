@@ -107,10 +107,12 @@ class BaseRepository implements BaseRepositoryInterface
         return $this->model->select($column)->with($relation)->findOrFail($modelId);
     }
 
-    public function createLanguagePivot($model, array $payload = [])
+    public function createPivot($model, array $payload = [], string $relation = '')
     {
-        return $model->languages()->attach($model->id, $payload);
+        return $model->{$relation}()->attach($model->id, $payload);
     }
+
+    
 
     
 

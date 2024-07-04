@@ -148,6 +148,7 @@
                     html += '</div>'
                 html += '</li>'
             }
+            
             $('.click-to-upload').addClass('hidden')
             $('#sortable').append(html)
             $('.upload-list').removeClass('hidden')

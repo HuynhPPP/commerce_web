@@ -41,6 +41,11 @@ class PostCatalogue extends Model
             )->withTimestamps();
     }
 
+    public function posts(){
+        return $this->belongToMany(Post::class, 
+        'post_catalogue_post','post_catalogue_id', 'post_id');
+    }
+
     public function post_catalogue_language(){
         return $this->hasMany(PostCatalogueLanguage::class, 'post_catalogue_id', 'id');
     }
