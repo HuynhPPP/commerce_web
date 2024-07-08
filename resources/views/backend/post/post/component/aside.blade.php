@@ -19,6 +19,16 @@
                 </div>
             </div>
         </div>  
+
+        @php
+            $catalogue = [];
+            if(isset($post)){
+                foreach($post->post_catalogues as $key => $val){
+                    $catalogue[] = $val->id;
+                }
+            }
+        @endphp
+
         <div class="row">
             <div class="col-lg-12">
                 <div class="form-row">
@@ -26,9 +36,11 @@
                     <select multiple class="form-control setupSelect2" name="catalogue[]" id="">
                         @foreach($dropdown as $key => $val)
                         <option
-                            @if(is_array(old('catalogue', (isset($post->catalogue)) ?
-                            $post->catalogue : [])) && in_array($key, old('catalogue',
-                            (isset($post->catalogue)) ? $post->catalogue : [])))
+                            @if(is_array(old('catalogue', (
+                                isset($catalogue) && count($catalogue)) ? $catalogue : [])
+                                ) && isset($post->post_catalogue_id) && $key !== $post->post_catalogue_id && in_array($key, 
+                                old('catalogue', (isset($catalogue)) ? $catalogue : []))
+                            )
                             selected
                             @endif value="{{ $key }}">{{ $val }}</option>
                         @endforeach

@@ -51,7 +51,7 @@
                 value="{{ $user->publish }}"
                 class="js-switch status"
                 data-field="publish"
-                data-model="User" 
+                data-model="{{$config['model']}}" 
                 data-modelId="{{ $user->id }}"
                 {{$user->publish == 2 ? "checked" : ''}} 
             />

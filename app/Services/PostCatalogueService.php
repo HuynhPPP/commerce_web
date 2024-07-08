@@ -28,7 +28,7 @@ class PostCatalogueService extends BaseService implements PostCatalogueServiceIn
     public function __construct(
         PostCatalogueRepository $postCatalogueRepository,
     ){
-        $this->language =$this->currentLanguage();
+        $this->language = $this->currentLanguage();
         $this->postCatalogueRepository = $postCatalogueRepository;
         $this->nestedset = new Nestedsetbie([
             'table' => 'post_catalogues',
@@ -75,7 +75,8 @@ class PostCatalogueService extends BaseService implements PostCatalogueServiceIn
                 $payloadLanguage['canonical'] = Str::slug($payloadLanguage['canonical']);
                 $payloadLanguage['language_id'] = $this->currentLanguage();
                 $payloadLanguage['post_catalogue_id'] = $postCatalogue->id; 
-                $language = $this->postCatalogueRepository->createLanguagePivot($postCatalogue, $payloadLanguage);
+                $language = $this->postCatalogueRepository->createPivot(
+                $postCatalogue, $payloadLanguage, 'languages');
             }
             $this->nestedset->Get('level ASC, order ASC');
             $this->nestedset->Recursive(0, $this->nestedset->Set());
@@ -100,10 +101,10 @@ class PostCatalogueService extends BaseService implements PostCatalogueServiceIn
             $flag = $this->postCatalogueRepository->update($id, $payload);
             if($flag == TRUE){
                 $payloadLanguage = $request->only($this->payloadLanguage());
-                $payloadLanguage['language_id'] = $this->currentLanguage();
+                $payloadLanguage['language_id'] = $this->language;
                 $payloadLanguage['post_catalogue_id'] = $id; 
                 $postCatalogue->languages()->detach([$payloadLanguage['language_id'], $id]);
-                $response = $this->postCatalogueRepository->createLanguagePivot($postCatalogue, $payloadLanguage);
+                $response = $this->postCatalogueRepository->createPivot($postCatalogue, $payloadLanguage, 'languages');
                 $this->nestedset->Get('level ASC, order ASC');
                 $this->nestedset->Recursive(0, $this->nestedset->Set());
                 $this->nestedset->Action();

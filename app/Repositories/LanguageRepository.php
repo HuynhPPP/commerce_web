@@ -21,6 +21,7 @@ class LanguageRepository extends BaseRepository implements LanguageRepositoryInt
     ){
         $this->model = $model;
     }
+
     
     
 }

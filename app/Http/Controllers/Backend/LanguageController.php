@@ -35,7 +35,8 @@ class LanguageController extends Controller
             'css' => [
                 'backend/css/plugins/switchery/switchery.css',
                 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css'
-            ]
+            ],
+            'model' => 'Language',
         ];
         $config['seo'] = config('apps.language');
         $template = 'backend.language.index';
@@ -125,4 +126,19 @@ class LanguageController extends Controller
             ],
         ];
     }
+
+    public function switchBackendLanguage($id)
+{
+    $language = $this->languageRepository->findById($id);
+    if ($this->languageService->switch($id)) {
+        session(['app_locale' => $language->canonical]);
+        \App::setLocale($language->canonical);
+
+        // Cập nhật giá trị APP_LOCALE trong file .env
+        UpdateEnv::setEnv('APP_LOCALE', $language->canonical);
+    }
+
+    return redirect()->back();
+}
+
 }

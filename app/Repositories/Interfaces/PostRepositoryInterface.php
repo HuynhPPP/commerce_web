@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Repositories\Interfaces;
+use App\Repositories\Interfaces\BaseRepositoryInterface;
 
 use App\Models\User;
 
@@ -8,7 +9,7 @@ use App\Models\User;
  * Class PostRepositoryInterface
  * @package App\Services
  */
-interface PostRepositoryInterface
+interface PostRepositoryInterface extends BaseRepositoryInterface
 {
     
 }

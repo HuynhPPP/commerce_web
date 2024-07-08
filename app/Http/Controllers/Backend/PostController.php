@@ -16,10 +16,11 @@ class PostController extends Controller
 {
     protected $postService;
     protected $postRepository;
+    protected $languageRepository;
     protected $language;
     public function __construct(
         PostService $postService,
-        PostRepository $postRepository
+        PostRepository $postRepository,
     ){
         $this->postService = $postService;
         $this->postRepository = $postRepository;
@@ -44,14 +45,18 @@ class PostController extends Controller
             'css' => [
                 'backend/css/plugins/switchery/switchery.css',
                 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css'
-            ]
+            ],
+            'model' => 'Post',
         ];
         $config['seo'] = config('apps.post');
         $template = 'backend.post.post.index';
+        $dropdown = $this->nestedset->Dropdown();
         return view('backend.dashboard.layout', compact(
             'template',
             'config',
             'posts',
+            'dropdown',
+       
         ));
     }
 
@@ -82,7 +87,7 @@ class PostController extends Controller
 
     public function edit($id)
     {
-        $post = $this->postCatalogueRepository->getPostCatalogueById($id, 
+        $post = $this->postRepository->getPostById($id, 
         $this->language);
 
         $config = $this->configData();
@@ -91,6 +96,7 @@ class PostController extends Controller
         $config['seo'] = config('apps.post');
         $config['method'] = 'edit';
         $album = json_decode($post->album);
+       
         return view('backend.dashboard.layout', compact(
             'template',
             'config',
@@ -113,9 +119,9 @@ class PostController extends Controller
     public function delete($id)
     {
         $config['seo'] = config('apps.post');
-        $post = $this->postCatalogueRepository->getPostCatalogueById($id, 
+        $post = $this->postRepository->getPostById($id, 
         $this->language);
-        $template = 'backend.post.post.post.delete';
+        $template = 'backend.post.post.delete';
         return view('backend.dashboard.layout', compact(
             'template',
             'post',
@@ -124,7 +130,7 @@ class PostController extends Controller
         ));
     }
 
-    public function destroy($id, DeletePostRequest $request) 
+    public function destroy($id) 
     {
         if($this->postService->destroy($id)){
             return redirect()->route('post.index');
@@ -147,4 +153,5 @@ class PostController extends Controller
             ]
         ];
     }
+   
 }

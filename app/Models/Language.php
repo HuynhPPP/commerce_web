@@ -15,7 +15,8 @@ class Language extends Model
         'canonical',
         'publish',
         'user_id',
-        'image'
+        'image',
+        'current'
         
         
     ];

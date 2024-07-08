@@ -32,6 +32,7 @@ class BaseRepository implements BaseRepositoryInterface
         array $orderBy = ['id', 'DESC'],
         array $join = [],
         array $relations = [], 
+        array $rawQuery = []
     ){
         $query = $this->model->select($column)->where(function($query) use ($condition){
             if(isset($condition['keyword']) && !empty($condition['keyword'])){
@@ -41,16 +42,17 @@ class BaseRepository implements BaseRepositoryInterface
             if(isset($condition['publish']) && $condition['publish'] !=0){
                 $query->where('publish', '=', $condition['publish']);
             }
-
-            if(isset($condition['where']) && count($condition['where'])){
-                foreach($condition['where'] as $key => $val){
-                    $query->where($val[0], $val[1], $val[2]);
-                }
-            } 
-
-
             return $query;
+
         });
+
+
+
+        if(isset($rawQuery['whereRaw']) && count($rawQuery['whereRaw'])) {
+            foreach($rawQuery['whereRaw'] as $key => $val){
+                $query->whereRaw($val[0], $val[1]);
+            }
+        }
 
         if(isset($relations) && !empty($relations)){
             foreach($relations as $relation){
@@ -62,6 +64,9 @@ class BaseRepository implements BaseRepositoryInterface
             foreach($join as $key => $val){
                 $query->join($val[0], $val[1], $val[2], $val[3]);
             }
+        }
+        if(isset($extend['groupBy']) && !empty($extend['groupBy'])){
+            $query->groupBy($extend['groupBy']);
         }
 
         if(isset($orderBy) && !empty($orderBy)){
@@ -89,6 +94,16 @@ class BaseRepository implements BaseRepositoryInterface
         return $this->model->whereIn($whereInField, $whereIn)->update($payload);
     }
 
+    public function updateByWhere($condition = [], $payload = [])
+    {
+        
+        $query = $this->model->newQuery();
+        foreach($condition as $key => $val){
+            $query->where($val[0], $val[1], $val[2]);
+        }
+        return $query->update($payload);
+    }
+
     public function delete(int $id = 0)
     {
         return $this->findById($id)->delete();
@@ -111,9 +126,5 @@ class BaseRepository implements BaseRepositoryInterface
     {
         return $model->{$relation}()->attach($model->id, $payload);
     }
-
-    
-
-    
 
 }

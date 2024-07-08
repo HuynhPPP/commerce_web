@@ -30,6 +30,7 @@ class PostRepository extends BaseRepository implements PostRepositoryInterface
         array $orderBy = ['id', 'DESC'],
         array $join = [],
         array $relations = [], 
+        array $rawQuery = []
        
     ){
         $query = $this->model->select($column)->where(function($query) use ($condition){
@@ -43,6 +44,11 @@ class PostRepository extends BaseRepository implements PostRepositoryInterface
             return $query;
 
         });
+        if(isset($rawQuery['whereRaw']) && count($rawQuery['whereRaw'])) {
+            foreach($rawQuery['whereRaw'] as $key => $val){
+                $query->whereRaw($val[0], $val[1]);
+            }
+        }
 
         if(isset($relations) && !empty($relations)){
             foreach($relations as $relation){
@@ -54,6 +60,10 @@ class PostRepository extends BaseRepository implements PostRepositoryInterface
             foreach($join as $key => $val){
                 $query->join($val[0], $val[1], $val[2], $val[3]);
             }
+        }
+
+        if(isset($extend['groupBy']) && !empty($extend['groupBy'])){
+            $query->groupBy($extend['groupBy']);
         }
 
         if(isset($orderBy) && !empty($orderBy)){
@@ -68,13 +78,13 @@ class PostRepository extends BaseRepository implements PostRepositoryInterface
     public function getPostById(int $id = 0, $language_id = 0)
     {
         return $this->model->select([
-                    'post_catalogues.id', 
-                    'post_catalogues.parent_id',
-                    'post_catalogues.image',
-                    'post_catalogues.icon',
-                    'post_catalogues.album',
-                    'post_catalogues.publish',
-                    'post_catalogues.follow',
+                    'posts.id', 
+                    'posts.post_catalogue_id',
+                    'posts.image',
+                    'posts.icon',
+                    'posts.album',
+                    'posts.publish',
+                    'posts.follow',
                     'tb2.name',
                     'tb2.description',
                     'tb2.content',
@@ -84,7 +94,8 @@ class PostRepository extends BaseRepository implements PostRepositoryInterface
                     'tb2.canonical',
                     ]
                 )
-                ->join('post_catalogue_language as tb2', 'tb2.post_catalogue_id', '=', 'post_catalogues.id')
+                ->join('post_language as tb2', 'tb2.post_id', '=', 'posts.id')
+                ->with('post_catalogues')
                 ->where('tb2.language_id', '=', $language_id)
                 ->findOrFail($id);
                             

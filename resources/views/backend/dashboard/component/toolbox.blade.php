@@ -11,7 +11,7 @@
                 href="#" 
                 class="changeStatusAll"
                 data-field="publish"
-                data-model="{{$model}}"
+                data-model="{{$config['model']}}"
                 data-value="2"
             >
             Publish toàn bộ
@@ -23,7 +23,7 @@
                 href="#" 
                 class="changeStatusAll"
                 data-field="publish"
-                data-model="{{$model}}"
+                data-model="{{$config['model']}}"
                 data-value="1"
             >
             UnPublish toàn bộ

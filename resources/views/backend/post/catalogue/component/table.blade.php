@@ -28,7 +28,7 @@
                 value="{{ $postCatalogue->publish }}"
                 class="js-switch status"
                 data-field="publish"
-                data-model="postCatalogue" 
+                data-model="{{$config['model']}}" 
                 data-modelId="{{ $postCatalogue->id }}"
                 {{$postCatalogue->publish == 2 ? "checked" : ''}} 
             />

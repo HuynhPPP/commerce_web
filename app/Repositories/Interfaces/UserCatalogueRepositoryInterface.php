@@ -8,7 +8,7 @@ use App\Models\User;
  * Class UserCatalogueRepositoryInterface
  * @package App\Services
  */
-interface UserCatalogueRepositoryInterface
+interface UserCatalogueRepositoryInterface extends BaseRepositoryInterface
 {
     
 }
