@@ -19,7 +19,7 @@
             <div class="col-lg-9">
                 <div class="ibox">
                     <div class="ibox-title">
-                        <h5>Thông tin chung</h5>
+                        <h5>{{ __('messages.generalTitle')}}</h5>
                     </div>
                     <div class="ibox-content">
                         @include('backend.post.catalogue.component.general')
@@ -41,7 +41,7 @@
                 name="send"
                 value="send"
             >
-            Lưu lại
+            {{ __('messages.saveButton')}}
             </button>
         </div>
     </div>

@@ -48,7 +48,7 @@ class PostCatalogueController extends Controller
             ],
             'model' => 'PostCatalogue',
         ];
-        $config['seo'] = config('apps.postcatalogue');
+        $config['seo'] = __('messages.postCatalogue');
         $template = 'backend.post.catalogue.index';
         return view('backend.dashboard.layout', compact(
             'template',

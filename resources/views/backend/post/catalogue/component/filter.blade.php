@@ -11,7 +11,7 @@
                         <option
                             {{ ($perpage == $i) ?  'selected' : '' }} 
                             value="{{$i}}">
-                            {{$i}} bản ghi
+                            {{$i}} {{ __('messages.perpage')}}
                         </option>
                         @endfor
                     </select>    
@@ -23,7 +23,7 @@
                         $publish = request('publish') ?: old('publish');
                     @endphp
                     <select name="publish" class="form-control setupSelect2 ml10">
-                        @foreach (config('apps.general.publish') as $key => $val)
+                        @foreach(__('messages.publish') as $key => $val)
                             <option 
                                 {{ ($publish == $key) ?  'selected' : '' }} 
                                 value="{{$key}}"
@@ -38,17 +38,17 @@
                             type="text" 
                             name="keyword" 
                             value="{{ request('keyword') ?: old('keyword') }}"
-                            placehoLder="Nhập từ khóa... "
+                            placehoLder="{{ __('messages.search_input')}}"
                             class="form-control"
                             >
                         <span class="input-group-btn">
                             <button type="submit" name="search" value="search"
-                                class="btn btn-primary mb0 btn-sm">Tìm Kiếm
+                                class="btn btn-primary mb0 btn-sm">{{ __('messages.keyword_search')}}
                             </button>
                         </span>
                         </div>
                     </div>
-                    <a href="{{route('post.catalogue.create')}}" class="btn btn-danger"><i class="fa fa-plus mr5"></i>Thêm mới nhóm bài viết</a>
+                    <a href="{{route('post.catalogue.create')}}" class="btn btn-danger"><i class="fa fa-plus mr5"></i>{{  __('messages.postCatalogue.create.title')}}</a>
                 </div>
             </div>
         </div>

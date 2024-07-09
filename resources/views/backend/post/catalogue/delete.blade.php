@@ -16,10 +16,10 @@
         <div class="row">
             <div class="col-lg-5">
                 <div class="panel-head">
-                    <div class="panel-title">Thông tin chung</div>
+                    <div class="panel-title">{{ __('messages.generalTitle')}}</div>
                     <div class="panel-description">
-                        <p>Bạn đang muốn xoá ngôn ngữ có tên là: <span class="text-danger">{{$postCatalogue->name}}</span></p>
-                        <p><span class="text-danger">Lưu ý: </span>Không thể khôi phục sau khi xoá. Hãy chắc chắn bạn muốn thực hiện chức năng này.</p>
+                        <p>{{ __('messages.generalDescription')}} <span class="text-danger">{{$postCatalogue->name}}</span></p>
+                        <p><span class="text-danger">{{ __('messages.deleteWarning')}} </span>{{ __('messages.generalDescription2')}}</p>
                     </div>
                 </div>
             </div>
@@ -30,7 +30,7 @@
                         <div class="row mb15">
                             <div class="col-lg-12">
                                 <div class="form-row">
-                                    <label for="" class="control-label text-left">Tên nhóm
+                                    <label for="" class="control-label text-left">{{ __('messages.postCatalogue.table.title')}}
                                     <span class="text-danger">(*)</span></label>
                                     <input 
                                         type="text"
@@ -57,7 +57,7 @@
                 name="send"
                 value="send"
             >
-            Xoá dữ liệu
+            {{ __('messages.deleteButton')}}
             </button>
         </div>
     </div>

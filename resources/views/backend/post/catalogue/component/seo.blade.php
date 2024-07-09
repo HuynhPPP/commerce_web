@@ -1,23 +1,26 @@
 <div class="ibox">
     <div class="ibox-title">
-        <h5>Cấu hình SEO</h5>
+        <h5>{{ __('messages.seoConfig')}}</h5>
     </div>
     <div class="ibox-content">
         <div class="seo-container">
             <div class="meta-title">
                 {{ 
-                    (old('meta_title', ($postCatalogue->meta_title) ?? '')) ? old('meta_title', ($postCatalogue->meta_title) ?? '') : 'Bạn chưa có tiêu đề SEO'
+                    (old('meta_title', ($postCatalogue->meta_title) ?? '')) ? 
+                     old('meta_title', ($postCatalogue->meta_title) ?? '') : __('messages.seoTitle')
                 }}
             </div>
             <div class="canonical">
                 {{ 
-                    (old('canonical', ($postCatalogue->canonical) ?? '')) ? config('app.url').old('canonical', ($postCatalogue->canonical) ?? '').config('apps.general.suffix') 
-                    : 'https://duong-dan-cua-ban.html'
+                    (old('canonical', ($postCatalogue->canonical) ?? '')) ? 
+                     config('app.url').old('canonical', ($postCatalogue->canonical) ?? '').config('apps.general.suffix') 
+                    : __('messages.seoCanonical')
                 }}
             </div>
             <div class="meta_description">
                 {{ 
-                    (old('meta_description', ($postCatalogue->meta_description) ?? '')) ? old('meta_description', ($postCatalogue->meta_description) ?? '') : 'Bạn chưa có mô tả SEO'
+                    (old('meta_description', ($postCatalogue->meta_description) ?? '')) ? 
+                     old('meta_description', ($postCatalogue->meta_description) ?? '') : __('messages.seoDescription')
                 }}
             </div>
         </div>
@@ -27,8 +30,8 @@
                     <div class="form-row">
                         <label for="" class="control-label text-left">
                             <div class="uk-flex uk-flex-middle uk-flex-space-between">
-                                <span>Mô tả SEO</span>
-                                <span class="count_meta-title">0 ký tự</span>
+                                <span>{{ __('messages.seoMetaTilte')}}</span>
+                                <span class="count_meta-title">0 {{ __('messages.seoCharacter')}}</span>
                             </div>
                         </label>
                         <input 
@@ -46,7 +49,7 @@
                 <div class="col-lg-12">
                     <div class="form-row">
                         <label for="" class="control-label text-left">
-                            <span>Từ khoá SEO</span>
+                            <span>{{ __('messages.seoMetaKeyWord')}}</span>
                         </label>
                         <input 
                             type="text"
@@ -64,8 +67,8 @@
                     <div class="form-row">
                         <label for="" class="control-label text-left">
                             <div class="uk-flex uk-flex-middle uk-flex-space-between">
-                                <span>Mô tả SEO</span>
-                                <span class="count_meta-description">0 ký tự</span>
+                                <span>{{ __('messages.seoMetaTilte')}}</span>
+                                <span class="count_meta-description">0 {{ __('messages.seoCharacter')}}</span>
                             </div>
                         </label>
                         <textarea 
@@ -83,7 +86,7 @@
                     <div class="form-row">
                         <label for="" class="control-label text-left">
                             <div class="uk-flex uk-flex-middle uk-flex-space-between">
-                                <span>Đường dẫn <span class="text-danger">(*)</span></span>
+                                <span>{{ __('messages.seoMetaCanonical')}} <span class="text-danger">(*)</span></span>
                             </div>
                         </label>
                         <div class="input-wrapper">
