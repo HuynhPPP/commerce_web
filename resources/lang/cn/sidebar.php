@@ -13,6 +13,10 @@
                     [
                         'title' => '用户管理',
                         'route' => 'user/index'
+                    ],
+                    [
+                        'title' => '權限管理',
+                        'route' => 'permission/index'
                     ]
                 ]
             ],

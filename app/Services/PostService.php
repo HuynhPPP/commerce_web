@@ -5,7 +5,7 @@ namespace App\Services;
 use App\Services\Interfaces\PostServiceInterface;
 use App\Services\BaseService;
 use App\Repositories\Interfaces\PostRepositoryInterface as PostRepository;
-
+use App\Repositories\Interfaces\RouterRepositoryInterface as RouterRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -23,11 +23,16 @@ class PostService extends BaseService implements PostServiceInterface
 {
     protected $postRepository;
     protected $language;
+    protected $routerRepository;
+    
     public function __construct(
         PostRepository $postRepository,
+        RouterRepository $routerRepository,
     ){
         $this->language =$this->currentLanguage();
         $this->postRepository = $postRepository;
+        $this->controllerName = 'PostController';
+        $this->routerRepository = $routerRepository;
     }
 
     public function paginate($request) 
@@ -63,6 +68,7 @@ class PostService extends BaseService implements PostServiceInterface
             if($post->id > 0) {
                 $this->updateLanguageForPost($post, $request);
                 $this->updateCatalogueForPost($post, $request);
+                $this->createRouter($post, $request, $this->controllerName);
             }
             DB::commit();
             return true;
@@ -80,6 +86,7 @@ class PostService extends BaseService implements PostServiceInterface
             if($this->uploadPost($post, $request)){
                 $this->updateLanguageForPost($post, $request);
                 $this->updateCatalogueForPost($post, $request);
+                $this->updateRouter($post, $request, $this->controllerName);
             }
             DB::commit();
             return true;
@@ -142,11 +149,7 @@ class PostService extends BaseService implements PostServiceInterface
         return $payload;
     }
 
-    private function formatAlbum($request)
-    {
-        return ($request->input('album') && !empty($request->input('album'))) ? 
-        json_encode($request->input('album')) : '';
-    } 
+    
 
     private function catalogue($request) 
     {

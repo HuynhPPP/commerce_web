@@ -28,6 +28,10 @@
                     [
                         'title' => 'Manage Posts',
                         'route' => 'post/index'
+                    ],
+                    [
+                        'title' => 'Permissions',
+                        'route' => 'permission/index'
                     ]
                 ]
             ],

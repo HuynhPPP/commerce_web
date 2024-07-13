@@ -4,7 +4,7 @@
             [
                 'title' => 'Quản lý thành viên',
                 'icon' => 'fa fa-user',
-                'name' => ['user'],
+                'name' => ['user', 'permission'],
                 'subModule' => [
                     [
                         'title' => 'Quản lý nhóm thành viên',
@@ -13,6 +13,10 @@
                     [
                         'title' => 'Quản lý thành viên',
                         'route' => 'user/index'
+                    ],
+                    [
+                        'title' => 'Quản lý quyền',
+                        'route' => 'permission/index'
                     ]
                 ]
             ],

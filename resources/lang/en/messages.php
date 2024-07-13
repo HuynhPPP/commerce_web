@@ -19,6 +19,21 @@ return [
             '',
         ],
     ],
+    'permission' => [
+            'index' => [
+                'title' => 'Quản lí Quyền',
+                'table' => 'Danh sách Quyền',
+            ],
+            'create' => [
+                'title' => 'Thêm mới Quyền',
+            ],
+            'edit' => [
+                'title' => 'Cập nhật Quyền',
+            ],
+            'delete' => [
+                'title' => 'Xoá Quyền',
+            ],
+        ],
 
     'parent_id' => 'Select Parent Category',
     'parent_notice' => '*Select Root if there is no parent category',

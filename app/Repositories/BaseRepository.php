@@ -122,6 +122,15 @@ class BaseRepository implements BaseRepositoryInterface
         return $this->model->select($column)->with($relation)->findOrFail($modelId);
     }
 
+    public function findByCondition($condition = [])
+    {
+        $query = $this->model->newQuery();
+        foreach($condition as $key => $val){
+            $query->where($val[0], $val[1], $val[2]);
+        }
+        return $query->first();
+    }
+
     public function createPivot($model, array $payload = [], string $relation = '')
     {
         return $model->{$relation}()->attach($model->id, $payload);

@@ -2,8 +2,8 @@
 
 namespace App\Services;
 
-use App\Services\Interfaces\LanguageServiceInterface;
-use App\Repositories\Interfaces\LanguageRepositoryInterface as LanguageRepository;
+use App\Services\Interfaces\PermissionServiceInterface;
+use App\Repositories\Interfaces\PermissionRepositoryInterface as PermissionRepository;
 use App\Services\BaseService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -14,17 +14,17 @@ use Illuminate\Support\Facades\Auth;
 
 
 /**
- * Class LanguageService
+ * Class PermissionService
  * @package App\Services
  */
-class LanguageService extends BaseService implements LanguageServiceInterface
+class PermissionService extends BaseService implements PermissionServiceInterface
 {
-    protected $languageRepository;
+    protected $permissionRepository;
     public function __construct(
-        LanguageRepository $languageRepository,
+        PermissionRepository $permissionRepository,
        
     ){
-        $this->languageRepository = $languageRepository;
+        $this->permissionRepository = $permissionRepository;
     }
 
     public function paginate($request) 
@@ -33,14 +33,14 @@ class LanguageService extends BaseService implements LanguageServiceInterface
         $condition['keyword'] = addslashes($request->input('keyword'));
         $condition['publish'] = $request->integer('publish');
         $perpage = $request->integer('perpage');
-        $languages = $this->languageRepository->pagination(
+        $permissions = $this->permissionRepository->pagination(
                 $this->paginateSelect(), 
                 $condition, 
                 $perpage, 
-                ['path' => 'language/index'],
+                ['path' => 'permission/index'],
         );
         
-        return $languages;
+        return $permissions;
     }
 
     public function create($request) {
@@ -48,7 +48,7 @@ class LanguageService extends BaseService implements LanguageServiceInterface
         try {
             $payload = $request->except(['_token','send']);
             $payload['user_id'] = Auth::id();
-            $language = $this->languageRepository->create($payload);
+            $permission = $this->permissionRepository->create($payload);
             DB::commit();
             return true;
         }catch (\Exception $e) {
@@ -63,7 +63,7 @@ class LanguageService extends BaseService implements LanguageServiceInterface
         try {
            
             $payload = $request->except(['_token','send']);
-            $language = $this->languageRepository->update($id, $payload);
+            $permission = $this->permissionRepository->update($id, $payload);
             DB::commit();
             return true;
         }catch (\Exception $e) {
@@ -77,7 +77,7 @@ class LanguageService extends BaseService implements LanguageServiceInterface
     {
         DB::beginTransaction();
         try {
-            $language = $this->languageRepository->forceDelete($id);
+            $permission = $this->permissionRepository->forceDelete($id);
             DB::commit();
             return true;
         }catch (\Exception $e) {
@@ -92,7 +92,7 @@ class LanguageService extends BaseService implements LanguageServiceInterface
         DB::beginTransaction();
         try {
             $payload[$post['field']] =  (($post['value'] == 1)?2:1);
-            $language = $this->languageRepository->update($post['modelId'], $payload);
+            $permission = $this->permissionRepository->update($post['modelId'], $payload);
             // $this->changeUserStatus($post, $payload[$post['field']]);
 
             DB::commit();
@@ -104,56 +104,12 @@ class LanguageService extends BaseService implements LanguageServiceInterface
         }
     }
 
-    public function updateStatusAll($post)
-    {
-        DB::beginTransaction();
-        try {
-            $payload[$post['field']] =  $post['value'];
-            $flag = $this->languageRepository->updateByWhereIn('id', $post['id'], $payload);
-            
-            // $this->changeUserStatus($post, $post['value']);
-
-            DB::commit();
-            return true;
-        }catch (\Exception $e) {
-            DB::rollback();
-            // echo $e->getMessage();die();
-            return false;
-        }
-       
-    }
-
-    public function switch($id)
-    {
-        try{
-            $language = $this->languageRepository->update($id, ['current' => 1]);
-            $payload = ['current' => 0];
-            $where = [
-                ['id', '!=', $id],
-            ];
-            $this->languageRepository->updateByWhere($where, $payload);
-
-        DB::commit();
-            return true;
-        }catch (\Exception $e) {
-            DB::rollback();
-            // echo $e->getMessage();die();
-            return false;
-        }
-    }
-
-    
-       
-
     private function paginateSelect()
     {
         return [
             'id', 
             'name', 
             'canonical',
-            'publish',
-            'image'
-           
         ];
     }
 }

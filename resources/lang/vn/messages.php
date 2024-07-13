@@ -19,6 +19,40 @@
                 '',
             ],
         ],
+        'userCatalogue' => [
+            'index' => [
+                'title' => 'Quản lí nhóm thành viên',
+                'table' => 'Danh sách nhóm thành viên',
+            ],
+            'create' => [
+                'title' => 'Thêm mới nhóm thành viên',
+            ],
+            'edit' => [
+                'title' => 'Cập nhật nhóm thành viên',
+            ],
+            'delete' => [
+                'title' => 'Xoá nhóm thành viên',
+            ],
+            'table' => [
+                'title' => 'Cập nhật quyền',
+                '',
+            ],
+        ],
+        'permission' => [
+            'index' => [
+                'title' => 'Quản lí Quyền',
+                'table' => 'Danh sách Quyền',
+            ],
+            'create' => [
+                'title' => 'Thêm mới Quyền',
+            ],
+            'edit' => [
+                'title' => 'Cập nhật Quyền',
+            ],
+            'delete' => [
+                'title' => 'Xoá Quyền',
+            ],
+        ],
 
         'parent_id' => 'Chọn danh mục cha',
         'parent_notice' => '*Chọn Root nếu không có danh mục cha',
@@ -35,7 +69,8 @@
         'seoTitle' => 'Bạn chưa có tiêu đề SEO',
         'seoCanonical' => 'https://duong-dan-cua-ban.html',
         'seoDescription' => 'Bạn chưa có mô tả SEO',
-        'seoMetaTilte' => 'Mô tả SEO',
+        'seoMetaTilte' => 'Tiêu đề SEO',
+        'seoMetaDescreption' => 'Mô tả SEO',
         'seoCharacter' => 'ký tự',
         'seoMetaKeyWord' => 'ký tự',
         'seoMetaCanonical' => 'Đường dẫn',

@@ -19,6 +19,21 @@ return [
             '',
         ],
     ],
+    'permission' => [
+            'index' => [
+                'title' => 'Quản lí Quyền',
+                'table' => 'Danh sách Quyền',
+            ],
+            'create' => [
+                'title' => 'Thêm mới Quyền',
+            ],
+            'edit' => [
+                'title' => 'Cập nhật Quyền',
+            ],
+            'delete' => [
+                'title' => 'Xoá Quyền',
+            ],
+        ],
 
     'parent_id' => '选择父类别',
     'parent_notice' => '*如果没有父类别，请选择根类别',

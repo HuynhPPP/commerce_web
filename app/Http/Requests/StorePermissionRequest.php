@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StorePostCatalogueRequest extends FormRequest
+class StorePermissionRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,18 +23,17 @@ class StorePostCatalogueRequest extends FormRequest
     {
         return [
             'name' => 'required',
-            'canonical' => 'required|unique:routers',
-         
+            'canonical' => 'required|unique:permissions',
         ];
     }
 
     public function messages(): array
     {
         return [
-            'name.required' => 'Bạn chưa nhập ô tiêu đề nhóm bài viết !',
-            'canonical.required' => 'Bạn chưa nhập ô đường dẫn !',
-            'canonical.unique' => 'Đường dẫn đã tồn tại ! Vui lòng chọn đường dẫn khác.'
-           
+            'name.required' => 'Bạn chưa nhập tên ngôn ngữ !',
+            'canonical.required' => 'Bạn chưa nhập từ khoá của ngôn ngữ !',
+            'canonical.unique' => 'Từ khoá đã tồn tại ! Vui lòng chọn từ khoá khác.'
+            
         ];
     }
 }
