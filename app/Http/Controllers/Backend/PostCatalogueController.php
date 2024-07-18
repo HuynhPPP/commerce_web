@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use App\Services\Interfaces\PostCatalogueServiceInterface as PostCatalogueService;
 use App\Repositories\Interfaces\PostCatalogueRepositoryInterface as PostCatalogueRepository;
 use App\Http\Requests\StorePostCatalogueRequest;
@@ -14,6 +15,7 @@ use App\Classes\Nestedsetbie;
 
 class PostCatalogueController extends Controller
 {
+    use AuthorizesRequests;
     protected $postCatalogueService;
     protected $postCatalogueRepository;
     protected $language;
@@ -34,8 +36,9 @@ class PostCatalogueController extends Controller
 
     public function index(Request $request)
     {
-        $postCatalogues = $this->postCatalogueService->paginate($request);
+        $this->authorize('modules', 'post.catalogue.index');
 
+        $postCatalogues = $this->postCatalogueService->paginate($request);
 
         $config = [
             'js' => [
@@ -57,8 +60,9 @@ class PostCatalogueController extends Controller
         ));
     }
 
-    public function create() {    
-        
+    public function create()
+    {    
+        $this->authorize('modules', 'post.catalogue.create');
         $config = $this->configData();
         $config['seo'] = config('apps.postcatalogue');
         $dropdown = $this->nestedset->Dropdown();
@@ -84,6 +88,7 @@ class PostCatalogueController extends Controller
 
     public function edit($id)
     {
+        $this->authorize('modules', 'post.catalogue.update');
         $postCatalogue = $this->postCatalogueRepository->getPostCatalogueById($id, 
         $this->language);
 
@@ -114,6 +119,7 @@ class PostCatalogueController extends Controller
 
     public function delete($id)
     {
+        $this->authorize('modules', 'post.catalogue.destroy');
         $config['seo'] = config('apps.postcatalogue');
         $postCatalogue = $this->postCatalogueRepository->getPostCatalogueById($id, 
         $this->language);

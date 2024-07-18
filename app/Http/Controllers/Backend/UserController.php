@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use App\Services\Interfaces\UserServiceInterface as UserService;
 use App\Repositories\Interfaces\ProvinceRepositoryInterface as ProvinceRepository;
 use App\Repositories\Interfaces\UserRepositoryInterface as UserRepository;
@@ -13,6 +15,7 @@ use App\Http\Requests\UpdateUserRequest;
 
 class UserController extends Controller
 {
+    use AuthorizesRequests;
     protected $userService;
     protected $provinceRepository;
     protected $userRepository;
@@ -28,8 +31,9 @@ class UserController extends Controller
 
     public function index(Request $request)
     {
-        $users = $this->userService->paginate($request);
+        $this->authorize('modules', 'user.index');
 
+        $users = $this->userService->paginate($request);
 
         $config = [
             'js' => [
@@ -51,7 +55,9 @@ class UserController extends Controller
         ));
     }
 
-    public function create() {
+    public function create() 
+    {
+        $this->authorize('modules', 'user.create');
         $provinces = $this->provinceRepository->all();
         
         $template = 'backend.user.user.store';
@@ -77,6 +83,7 @@ class UserController extends Controller
 
     public function edit($id)
     {
+        $this->authorize('modules', 'user.update');
         $user = $this->userRepository->findById($id);
         $provinces = $this->provinceRepository->all();
         
@@ -105,6 +112,7 @@ class UserController extends Controller
 
     public function delete($id)
     {
+        $this->authorize('modules', 'user.destroy');
         $config['seo'] = config('apps.user');
         $user = $this->userRepository->findById($id);
         $template = 'backend.user.user.delete';

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use App\Services\Interfaces\LanguageServiceInterface as LanguageService;
 use App\Repositories\Interfaces\LanguageRepositoryInterface as LanguageRepository;
 use App\Http\Requests\StoreLanguageRequest;
@@ -12,6 +13,7 @@ use App\Http\Requests\UpdateLanguageRequest;
 
 class LanguageController extends Controller
 {
+    use AuthorizesRequests;
     protected $languageService;
     protected $languageRepository;
     public function __construct(
@@ -24,8 +26,9 @@ class LanguageController extends Controller
 
     public function index(Request $request)
     {
-        $languages = $this->languageService->paginate($request);
+        $this->authorize('modules', 'language.index');
 
+        $languages = $this->languageService->paginate($request);
 
         $config = [
             'js' => [
@@ -47,8 +50,9 @@ class LanguageController extends Controller
         ));
     }
 
-    public function create() {    
-        
+    public function create() 
+    {    
+        $this->authorize('modules', 'language.create');
         $config = $this->configData();
         $config['seo'] = config('apps.language');
         $config['method'] = 'create';
@@ -70,7 +74,7 @@ class LanguageController extends Controller
 
     public function edit($id)
     {
-       
+        $this->authorize('modules', 'language.update');
         $language = $this->languageRepository->findById($id);
         $config = $this->configData();
         $template = 'backend.language.store';
@@ -97,6 +101,7 @@ class LanguageController extends Controller
 
     public function delete($id)
     {
+        $this->authorize('modules', 'language.destroy');
         $config['seo'] = config('apps.language');
         $language = $this->languageRepository->findById($id);
         $template = 'backend.language.delete';

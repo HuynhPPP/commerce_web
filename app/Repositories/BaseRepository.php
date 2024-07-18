@@ -20,8 +20,8 @@ class BaseRepository implements BaseRepositoryInterface
         $this->model = $model;
     }
 
-    public function all(){
-        return $this->model->all();
+    public function all(array $relation = []){
+        return $this->model->with($relation)->get();
     }
 
     public function pagination(

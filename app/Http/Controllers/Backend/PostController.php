@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use App\Services\Interfaces\PostServiceInterface as PostService;
 use App\Repositories\Interfaces\PostRepositoryInterface as PostRepository;
 use App\Http\Requests\StorePostRequest;
@@ -14,6 +15,7 @@ use App\Classes\Nestedsetbie;
 
 class PostController extends Controller
 {
+    use AuthorizesRequests;
     protected $postService;
     protected $postRepository;
     protected $languageRepository;
@@ -34,8 +36,8 @@ class PostController extends Controller
 
     public function index(Request $request)
     {
+        $this->authorize('modules', 'post.index');
         $posts = $this->postService->paginate($request);
-
 
         $config = [
             'js' => [
@@ -60,8 +62,9 @@ class PostController extends Controller
         ));
     }
 
-    public function create() {    
-        
+    public function create() 
+    {    
+        $this->authorize('modules', 'post.create');
         $config = $this->configData();
         $config['seo'] = config('apps.post');
         $dropdown = $this->nestedset->Dropdown();
@@ -87,6 +90,7 @@ class PostController extends Controller
 
     public function edit($id)
     {
+        $this->authorize('modules', 'post.update');
         $post = $this->postRepository->getPostById($id, 
         $this->language);
 
@@ -118,6 +122,7 @@ class PostController extends Controller
 
     public function delete($id)
     {
+        $this->authorize('modules', 'post.destroy');
         $config['seo'] = config('apps.post');
         $post = $this->postRepository->getPostById($id, 
         $this->language);

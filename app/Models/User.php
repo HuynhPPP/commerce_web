@@ -63,4 +63,9 @@ class User extends Authenticatable
     public function user_catalogues_tables(){
         return $this->belongsTo(UserCatalogue::class, 'user_catalogue_id', 'id');
     }
+
+    public function hasPermission($permissionCanonical)
+    {
+        return $this->user_catalogues_tables->permissions->contains('canonical', $permissionCanonical);
+    }
 }

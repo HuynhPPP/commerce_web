@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use App\Services\Interfaces\UserCatalogueServiceInterface as UserCatalogueService;
 use App\Repositories\Interfaces\UserCatalogueRepositoryInterface as UserCatalogueRepository;
 use App\Repositories\Interfaces\PermissionRepositoryInterface as PermissionRepository;
@@ -15,6 +16,7 @@ use App\Http\Requests\UpdateUserCatalogRequest;
 
 class UserCatalogueController extends Controller
 {
+    use AuthorizesRequests;
     protected $userCatalogueService;
     protected $userCatalogueRepository;
     protected $permissionRepository;
@@ -31,8 +33,8 @@ class UserCatalogueController extends Controller
 
     public function index(Request $request)
     {
+        $this->authorize('modules', 'user.catalogue.index');
         $userCatalogues = $this->userCatalogueService->paginate($request);
-
 
         $config = [
             'js' => [
@@ -54,7 +56,9 @@ class UserCatalogueController extends Controller
         ));
     }
 
-    public function create() {      
+    public function create() 
+    {      
+        $this->authorize('modules', 'user.catalogue.create');
         $template = 'backend.user.catalogue.store';
         
         $config['seo'] = config('apps.usercatalogue');
@@ -78,6 +82,7 @@ class UserCatalogueController extends Controller
 
     public function edit($id)
     {
+        $this->authorize('modules', 'user.catalogue.update');
         $userCatalogue = $this->userCatalogueRepository->findById($id);
         $template = 'backend.user.catalogue.store';
         
@@ -103,6 +108,7 @@ class UserCatalogueController extends Controller
 
     public function delete($id)
     {
+        $this->authorize('modules', 'user.catalogue.delete');
         $config['seo'] = config('apps.usercatalogue');
         $userCatalogue = $this->userCatalogueRepository->findById($id);
         $template = 'backend.user.catalogue.delete';
@@ -126,7 +132,8 @@ class UserCatalogueController extends Controller
 
     public function permission()
     {
-        $userCatalogues = $this->userCatalogueRepository->all();
+        // $this->authorize('modules', 'user.catalogue.permission');
+        $userCatalogues = $this->userCatalogueRepository->all(['permissions']);
         $permissions = $this->permissionRepository->all();
         $config['seo'] = __('messages.userCatalogue');
         $template = 'backend.user.catalogue.permission';
@@ -137,5 +144,13 @@ class UserCatalogueController extends Controller
             'config'
             
         ));
+    }
+
+    public function updatePermission(Request $request)
+    {
+        if($this->userCatalogueService->setPermission($request)){
+            return redirect()->route('user.catalogue.index');
+        }
+        return redirect()->route('user.catalogue.index');
     }
 }
