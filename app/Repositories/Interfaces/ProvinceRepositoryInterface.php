@@ -10,6 +10,6 @@ use App\Models\User;
  */
 interface ProvinceRepositoryInterface extends BaseRepositoryInterface
 {
-    public function all();
+    public function all(array $relation = []);
 
 }

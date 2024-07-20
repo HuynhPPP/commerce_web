@@ -31,8 +31,8 @@ class PostCatalogueService extends BaseService implements PostCatalogueServiceIn
         PostCatalogueRepository $postCatalogueRepository,
         RouterRepository $routerRepository,
     ){
-        $this->controllerName = 'PostCatalogueController';
         $this->language = $this->currentLanguage();
+        $this->controllerName = 'PostCatalogueController';
         $this->postCatalogueRepository = $postCatalogueRepository;
         $this->routerRepository = $routerRepository;
         $this->nestedset = new Nestedsetbie([

@@ -223,7 +223,7 @@ table strong {
     
 }
 
-input[name=canonical] {
+.seo-canonical {
     color: navy;
     font-weight: 600;
 }
@@ -345,6 +345,12 @@ a{
 }
 .language-item.active {
     background: #2962ff;
+}
+
+.language-flag{
+    width: 50px;
+    height: 16px !important;
+    display: inline-block !important;
 }
 
     

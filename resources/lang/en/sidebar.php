@@ -4,7 +4,7 @@
             [
                 'title' => 'User Management',
                 'icon' => 'fa fa-user',
-                'name' => ['user'],
+                'name' => ['user', 'permission'],
                 'subModule' => [
                     [
                         'title' => 'User Group Management',
@@ -13,6 +13,10 @@
                     [
                         'title' => 'User Management',
                         'route' => 'user/index'
+                    ],
+                    [
+                        'title' => 'Permissions',
+                        'route' => 'permission/index'
                     ]
                 ]
             ],
@@ -28,10 +32,6 @@
                     [
                         'title' => 'Manage Posts',
                         'route' => 'post/index'
-                    ],
-                    [
-                        'title' => 'Permissions',
-                        'route' => 'permission/index'
                     ]
                 ]
             ],

@@ -13,6 +13,7 @@ interface BaseRepositoryInterface
     public function create(array $payload);
     public function update(int $id = 0, array $payload = []);
     public function delete(int $id = 0);
+    public function forceDelete(int $id = 0);
     public function pagination(
         array $column = ['*'], 
         array $condition = [],
@@ -21,8 +22,9 @@ interface BaseRepositoryInterface
         array $orderBy = ['id', 'DESC'],
         array $join = [],
         array $relations = [], 
-        array $rawQuery = []  
+        array $rawQuery = []
     );
     public function updateByWhereIn($whereInField = '', array $whereIn = [], array $payload = []);
     public function createPivot($model, array $payload = [], string $relation = '');
+    public function findByCondition($condition = []);
 }

@@ -7,6 +7,7 @@ use App\Repositories\Interfaces\LanguageRepositoryInterface;
 use App\Repositories\BaseRepository;
 
 
+
 /**
  * Class UserService
  * @package App\Services
@@ -22,6 +23,4 @@ class LanguageRepository extends BaseRepository implements LanguageRepositoryInt
         $this->model = $model;
     }
 
-    
-    
 }

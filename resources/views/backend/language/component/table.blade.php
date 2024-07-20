@@ -59,5 +59,5 @@
     @endif
     </tbody>
 </table>
-{{$languages->links('pagination::bootstrap-4')}}
+{{ $languages->links('pagination::bootstrap-4') }}
 

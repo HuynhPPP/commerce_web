@@ -4,7 +4,7 @@
             [
                 'title' => '用户管理',
                 'icon' => 'fa fa-user',
-                'name' => ['user'],
+                'name' => ['user', 'permission'],
                 'subModule' => [
                     [
                         'title' => '用户组管理',
