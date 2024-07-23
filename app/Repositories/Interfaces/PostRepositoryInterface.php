@@ -11,5 +11,5 @@ use App\Models\User;
  */
 interface PostRepositoryInterface extends BaseRepositoryInterface
 {
-    
+    public function getPostById(int $id = 0, $language_id = 0);
 }

@@ -67,7 +67,7 @@
                     <div class="form-row">
                         <label for="" class="control-label text-left">
                             <div class="uk-flex uk-flex-middle uk-flex-space-between">
-                                <span>{{ __('messages.seoMetaDescreption')}}</span>
+                                <span>{{ __('messages.seoMetaDescription')}}</span>
                                 <span class="count_meta-description">0 {{ __('messages.seoCharacter')}}</span>
                             </div>
                         </label>

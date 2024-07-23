@@ -61,3 +61,4 @@
 </table>
 {{ $languages->links('pagination::bootstrap-4') }}
 
+

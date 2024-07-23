@@ -4,10 +4,11 @@
         <th style="width: 50px;">
             <input type="checkbox" id="checkAll" value="checkAll" class="input-checkbox">
         </th>
-        <th>Tiêu đề</th>
-        <th style="width: 80px" class="text-center">Vị trí</th>
-        <th class="text-center" style="width: 100px;">Tình trạng</th>
-        <th class="text-center" style="width: 100px;">Thao tác</th>
+        <th>{{ __('messages.Post.table.title')}}</th>
+        @include('backend.dashboard.component.languageTh')
+        <th style="width: 80px" class="text-center">{{ __('messages.tableLocation')}}</th>
+        <th class="text-center" style="width: 100px;">{{ __('messages.tableStatus')}}</th>
+        <th class="text-center" style="width: 100px;">{{ __('messages.tableAction')}}</th>
     </tr>
     </thead>
     <tbody>
@@ -29,7 +30,7 @@
                     </div>
                     
                     <div class="catalogue">
-                        <span class="text-danger">Nhóm hiển thị: </span>
+                        <span class="text-danger">{{ __('messages.tableGroup')}} </span>
                         @foreach($post->post_catalogues as $val)
                         @foreach($val->post_catalogue_language as $cat)
                         <a href="{{route('post.index', ['post_catalogue_id' => $val->id])}}" title="">{{$cat->name}}</a>
@@ -40,7 +41,8 @@
                 </div>
             </div>
         </td>
-
+        @include('backend.dashboard.component.languageTd', 
+        ['model' => $post, 'modeling' => 'Post'])
         <td>
             <input 
                 type="text" 

@@ -1,13 +1,13 @@
 <div class="ibox">
     <div class="ibox-title">
-        <h5>Chọn danh mục cha</h5>
+        <h5>{{ __('messages.parent_id')}}</h5>
     </div>
     <div class="ibox-content">
         <div class="row mb15">
             <div class="col-lg-12">
                 <div class="form-row">
                   
-                    <span class="text-danger notice">*Chọn Root nếu không có danh mục cha</span></label>
+                    <span class="text-danger notice">{{ __('messages.parent_notice')}}</span></label>
                     <select class="form-control setupSelect2" name="post_catalogue_id" id="">
                         @foreach($dropdown as $key => $val)
                         <option 
@@ -32,7 +32,7 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="form-row">
-                    <label class="control-label">Danh mục phụ</label>
+                    <label class="control-label">{{ __('messages.children_id')}}</label>
                     <select multiple class="form-control setupSelect2" name="catalogue[]" id="">
                         @foreach($dropdown as $key => $val)
                         <option
@@ -52,7 +52,7 @@
 </div>
 <div class="ibox">
     <div class="ibox-title">
-        <h5>Chọn ảnh đại diện</h5>
+        <h5>{{ __('messages.image')}}</h5>
     </div>
     <div class="ibox-content">
         <div class="row">
@@ -73,7 +73,7 @@
 </div>
 <div class="ibox">
     <div class="ibox-title">
-        <h5>Cấu hình nâng cao</h5>
+        <h5>{{ __('messages.config_advange')}}</h5>
     </div>
     <div class="ibox-content">
         <div class="row">
@@ -85,7 +85,7 @@
                         name="publish" 
                         id=""
                     >
-                    @foreach(config('apps.general.publish') as $key => $val)
+                    @foreach(__('messages.publish') as $key => $val)
                         <option 
                             {{ $key == old('publish', (isset($post->publish)) ? 
                                 $post->publish : '') ? 'selected' : '' }}
@@ -99,7 +99,7 @@
                         name="follow" 
                         id=""
                     >
-                    @foreach(config('apps.general.follow') as $key => $val)
+                    @foreach(__('messages.follow') as $key => $val)
                         <option 
                             {{ $key == old('follow', (isset($post->follow)) ? 
                                 $post->follow : '') ? 'selected' : '' }}

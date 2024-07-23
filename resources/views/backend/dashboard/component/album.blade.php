@@ -1,9 +1,9 @@
 <div class="ibox">
     <div class="ibox-title">
         <div class="uk-flex uk-flex-middle uk-flex-space-between">
-            <h5>Album ảnh</h5>
+            <h5>{{ __('messages.album')}}</h5>
             <div class="upload-album">
-                <a href="" class="upload-picture">Chọn hình</a>
+                <a href="" class="upload-picture">{{ __('messages.selectImage')}}</a>
             </div>
         </div>
         <div class="ibox-content">
@@ -43,7 +43,7 @@
                             </a>
                         </div>
                        
-                        <div class="small-text">Sử dụng nút chọn hình hoặc click vào đây để thêm hình ảnh</div>
+                        <div class="small-text">{{ __('messages.AlbumDecription')}}</div>
                     </div>
                     @endif
                     

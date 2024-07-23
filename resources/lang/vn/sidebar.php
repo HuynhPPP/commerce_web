@@ -38,11 +38,15 @@
             [
                 'title' => 'Cấu hình chung',
                 'icon' => 'fa fa-language',
-                'name' => ['language'],
+                'name' => ['language', 'generate'],
                 'subModule' => [
                     [
                         'title' => 'Quản lý ngôn ngữ',
                         'route' => 'language/index'
+                    ],
+                    [
+                        'title' => 'Quản lý Module',
+                        'route' => 'generate/index'
                     ]
                 ]
             ]

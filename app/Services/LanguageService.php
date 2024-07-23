@@ -49,8 +49,9 @@ class LanguageService extends BaseService implements LanguageServiceInterface
             'id', 
             'name', 
             'canonical',
+            'image',
             'publish',
-            'image'
+            
         ];
     }
 

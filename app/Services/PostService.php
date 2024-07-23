@@ -22,26 +22,25 @@ use Illuminate\Support\Str;
 class PostService extends BaseService implements PostServiceInterface
 {
     protected $postRepository;
-    protected $language;
     protected $routerRepository;
+    protected $language;
     
     public function __construct(
         PostRepository $postRepository,
         RouterRepository $routerRepository,
     ){
-        $this->language =$this->currentLanguage();
         $this->postRepository = $postRepository;
         $this->controllerName = 'PostController';
         $this->routerRepository = $routerRepository;
     }
 
-    public function paginate($request) 
+    public function paginate($request, $languageId) 
     {
        
         $condition['keyword'] = addslashes($request->input('keyword'));
         $condition['publish'] = $request->integer('publish');
         $condition['where'] = [
-            ['tb2.language_id', '=', $this->language],
+            ['tb2.language_id', '=', $languageId],
         ];
         $perpage = $request->integer('perpage');
         $posts = $this->postRepository->pagination(
@@ -60,13 +59,13 @@ class PostService extends BaseService implements PostServiceInterface
         return $posts;
     }
 
-    public function create($request) {
+    public function create($request, $languageId) {
         DB::beginTransaction();
         try {
             $post = $this->createPost($request);
             
             if($post->id > 0) {
-                $this->updateLanguageForPost($post, $request);
+                $this->updateLanguageForPost($post, $request, $languageId);
                 $this->updateCatalogueForPost($post, $request);
                 $this->createRouter($post, $request, $this->controllerName);
             }
@@ -79,12 +78,12 @@ class PostService extends BaseService implements PostServiceInterface
         }
     }
 
-    public function update($id, $request) {
+    public function update($id, $request, $languageId) {
         DB::beginTransaction();
         try {
             $post = $this->postRepository->findById($id);
             if($this->uploadPost($post, $request)){
-                $this->updateLanguageForPost($post, $request);
+                $this->updateLanguageForPost($post, $request, $languageId);
                 $this->updateCatalogueForPost($post, $request);
                 $this->updateRouter($post, $request, $this->controllerName);
             }
@@ -128,10 +127,10 @@ class PostService extends BaseService implements PostServiceInterface
         return $this->postRepository->update($post->id, $payload);
     }
 
-    private function updateLanguageForPost($post, $request)
+    private function updateLanguageForPost($post, $request, $languageId)
     {
         $payload = $request->only($this->payloadLanguage());
-        $payload = $this->formatLanguagePayload($payload, $post->id);
+        $payload = $this->formatLanguagePayload($payload, $post->id, $languageId);
         $post->languages()->detach([$this->language, $post->id]);
         return $this->postRepository->createPivot($post, $payload, 'languages');
     }
@@ -141,10 +140,10 @@ class PostService extends BaseService implements PostServiceInterface
         $post->post_catalogues()->sync($this->catalogue($request));
     }
 
-    private function formatLanguagePayload($payload, $postId)
+    private function formatLanguagePayload($payload, $postId, $languageId)
     {
         $payload['canonical'] = Str::slug($payload['canonical']);
-        $payload['language_id'] = $this->currentLanguage();
+        $payload['language_id'] = $languageId;
         $payload['post_id'] = $postId;
         return $payload;
     }

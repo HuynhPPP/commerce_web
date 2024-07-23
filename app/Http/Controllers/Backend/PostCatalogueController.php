@@ -12,6 +12,7 @@ use App\Http\Requests\StorePostCatalogueRequest;
 use App\Http\Requests\UpdatePostCatalogueRequest;
 use App\Http\Requests\DeletePostCatalogueRequest;
 use App\Classes\Nestedsetbie;
+use App\Models\Language;
 
 class PostCatalogueController extends Controller
 {
@@ -19,19 +20,32 @@ class PostCatalogueController extends Controller
     protected $postCatalogueService;
     protected $postCatalogueRepository;
     protected $language;
+    protected $nestedset;
     public function __construct(
         PostCatalogueService $postCatalogueService,
         PostCatalogueRepository $postCatalogueRepository
     ){
+        $this->middleware(function($request, $next){
+            $locale = app()->getLocale();
+            $language = Language::where('canonical', $locale)->first();
+            $this->language = $language->id;
+            $this->initialize();
+            return $next($request);
+        });
+
         $this->postCatalogueService = $postCatalogueService;
         $this->postCatalogueRepository = $postCatalogueRepository;
-        $this->postCatalogueRepository = $postCatalogueRepository;
+        $this->initialize();
+        
+    }
+
+    public function initialize()
+    {
         $this->nestedset = new Nestedsetbie([
             'table' => 'post_catalogues',
             'foreignkey' => 'post_catalogue_id',
-            'language_id' => 1,
+            'language_id' => $this->language,
         ]);
-        $this->language = $this->currentLanguage();
     }
 
     public function index(Request $request)

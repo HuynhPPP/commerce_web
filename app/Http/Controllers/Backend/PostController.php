@@ -12,6 +12,7 @@ use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
 use App\Http\Requests\DeletePostRequest;
 use App\Classes\Nestedsetbie;
+use App\Models\Language;
 
 class PostController extends Controller
 {
@@ -20,24 +21,37 @@ class PostController extends Controller
     protected $postRepository;
     protected $languageRepository;
     protected $language;
+    protected $nestedset;
     public function __construct(
         PostService $postService,
         PostRepository $postRepository,
     ){
+        $this->middleware(function($request, $next){
+            $locale = app()->getLocale();
+            $language = Language::where('canonical', $locale)->first();
+            $this->language = $language->id;
+            $this->initialize();
+            return $next($request);
+        });
+
         $this->postService = $postService;
         $this->postRepository = $postRepository;
+        $this->initialize();
+    }
+
+    public function initialize()
+    {
         $this->nestedset = new Nestedsetbie([
             'table' => 'post_catalogues',
             'foreignkey' => 'post_catalogue_id',
-            'language_id' => 1,
+            'language_id' => $this->language,
         ]);
-        $this->language = $this->currentLanguage();
     }
 
     public function index(Request $request)
     {
         $this->authorize('modules', 'post.index');
-        $posts = $this->postService->paginate($request);
+        $posts = $this->postService->paginate($request, $this->language);
 
         $config = [
             'js' => [
@@ -50,7 +64,7 @@ class PostController extends Controller
             ],
             'model' => 'Post',
         ];
-        $config['seo'] = config('apps.post');
+        $config['seo'] = __('messages.Post');
         $template = 'backend.post.post.index';
         $dropdown = $this->nestedset->Dropdown();
         return view('backend.dashboard.layout', compact(
@@ -66,7 +80,7 @@ class PostController extends Controller
     {    
         $this->authorize('modules', 'post.create');
         $config = $this->configData();
-        $config['seo'] = config('apps.post');
+        $config['seo'] = __('messages.Post');
         $dropdown = $this->nestedset->Dropdown();
         $config['method'] = 'create';
         
@@ -80,7 +94,7 @@ class PostController extends Controller
     }
 
     public function store(StorePostRequest $request){
-        if($this->postService->create($request)){
+        if($this->postService->create($request, $this->language)){
       
             return redirect()->route('post.index');
         }
@@ -97,7 +111,7 @@ class PostController extends Controller
         $config = $this->configData();
         $template = 'backend.post.post.store';
         $dropdown = $this->nestedset->Dropdown();
-        $config['seo'] = config('apps.post');
+        $config['seo'] = __('messages.Post');
         $config['method'] = 'edit';
         $album = json_decode($post->album);
        
@@ -123,7 +137,7 @@ class PostController extends Controller
     public function delete($id)
     {
         $this->authorize('modules', 'post.destroy');
-        $config['seo'] = config('apps.post');
+        $config['seo'] = __('messages.Post');
         $post = $this->postRepository->getPostById($id, 
         $this->language);
         $template = 'backend.post.post.delete';

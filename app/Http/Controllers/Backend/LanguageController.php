@@ -154,8 +154,10 @@ class LanguageController extends Controller
         $currentLanguage = $languageInstance->findByCondition([
             ['canonical', '=', session('app_locale')]
         ]);
-        $object = $repositoryInstance->getPostCatalogueById($id, $currentLanguage->id);
-        $objectTranslate = $repositoryInstance->getPostCatalogueById($id, $languageId);
+
+        $method = 'get'.$model.'ById';
+        $object = $repositoryInstance->{$method}($id, $currentLanguage->id);
+        $objectTranslate = $repositoryInstance->{$method}($id, $languageId);
 
         $this->authorize('modules', 'language.translate');
         $config = [
