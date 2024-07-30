@@ -6,24 +6,26 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use App\Services\Interfaces\PostCatalogueServiceInterface as PostCatalogueService;
-use App\Repositories\Interfaces\PostCatalogueRepositoryInterface as PostCatalogueRepository;
-use App\Http\Requests\StorePostCatalogueRequest;
-use App\Http\Requests\UpdatePostCatalogueRequest;
-use App\Http\Requests\DeletePostCatalogueRequest;
+use App\Services\Interfaces\{ModuleTemplate}ServiceInterface as {ModuleTemplate}Service;
+use App\Repositories\Interfaces\{ModuleTemplate}RepositoryInterface as {ModuleTemplate}Repository;
+use App\Http\Requests\Store{ModuleTemplate}Request;
+use App\Http\Requests\Update{ModuleTemplate}Request;
+use App\Http\Requests\Delete{ModuleTemplate}Request;
 use App\Classes\Nestedsetbie;
+use Auth;
 use App\Models\Language;
+use Illuminate\Support\Facades\App;
 
-class PostCatalogueController extends Controller
+class {ModuleTemplate}Controller extends Controller
 {
     use AuthorizesRequests;
-    protected $postCatalogueService;
-    protected $postCatalogueRepository;
+    protected ${moduleTemplate}Service;
+    protected ${moduleTemplate}Repository;
     protected $language;
     protected $nestedset;
     public function __construct(
-        PostCatalogueService $postCatalogueService,
-        PostCatalogueRepository $postCatalogueRepository
+        {ModuleTemplate}Service ${moduleTemplate}Service,
+        {ModuleTemplate}Repository ${moduleTemplate}Repository
     ){
         $this->middleware(function($request, $next){
             $locale = app()->getLocale();
@@ -33,25 +35,25 @@ class PostCatalogueController extends Controller
             return $next($request);
         });
 
-        $this->postCatalogueService = $postCatalogueService;
-        $this->postCatalogueRepository = $postCatalogueRepository;
+        $this->{moduleTemplate}Service = ${moduleTemplate}Service;
+        $this->{moduleTemplate}Repository = ${moduleTemplate}Repository;
         
     }
 
     public function initialize()
     {
         $this->nestedset = new Nestedsetbie([
-            'table' => 'post_catalogues',
-            'foreignkey' => 'post_catalogue_id',
+            'table' => '{tableName}',
+            'foreignkey' => '{foreignKey}',
             'language_id' => $this->language,
         ]);
     }
 
     public function index(Request $request)
     {
-        $this->authorize('modules', 'post.catalogue.index');
+        $this->authorize('modules', '{moduleView}.index');
 
-        $postCatalogues = $this->postCatalogueService->paginate($request, $this->language);
+        ${moduleTemplate}s = $this->{moduleTemplate}Service->paginate($request, $this->language);
 
         $config = [
             'js' => [
@@ -62,26 +64,26 @@ class PostCatalogueController extends Controller
                 'backend/css/plugins/switchery/switchery.css',
                 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css'
             ],
-            'model' => 'PostCatalogue',
+            'model' => '{ModuleTemplate}',
         ];
-        $config['seo'] = __('messages.postCatalogue');
-        $template = 'backend.post.catalogue.index';
+        $config['seo'] = __('messages.{moduleTemplate}');
+        $template = 'backend.{moduleView}.index';
         return view('backend.dashboard.layout', compact(
             'template',
             'config',
-            'postCatalogues',
+            '{moduleTemplate}s',
         ));
     }
 
     public function create()
     {    
-        $this->authorize('modules', 'post.catalogue.create');
+        $this->authorize('modules', '{moduleView}.create');
         $config = $this->configData();
-        $config['seo'] = __('messages.postCatalogue');
+        $config['seo'] = __('messages.{moduleTemplate}');
         $dropdown = $this->nestedset->Dropdown();
         $config['method'] = 'create';
         
-        $template = 'backend.post.catalogue.store';
+        $template = 'backend.{moduleView}.store';
         return view('backend.dashboard.layout', compact(
             'template',
             'config',
@@ -90,68 +92,68 @@ class PostCatalogueController extends Controller
         ));
     }
 
-    public function store(StorePostCatalogueRequest $request){
-        if($this->postCatalogueService->create($request)){
+    public function store(Store{ModuleTemplate}Request $request){
+        if($this->{moduleTemplate}Service->create($request)){
       
-            return redirect()->route('post.catalogue.index');
+            return redirect()->route('{moduleView}.index');
         }
         
-        return redirect()->route('post.catalogue.index');
+        return redirect()->route('{moduleView}.index');
     }
 
     public function edit($id)
     {
-        $this->authorize('modules', 'post.catalogue.update');
-        $postCatalogue = $this->postCatalogueRepository->getPostCatalogueById($id, 
+        $this->authorize('modules', '{moduleView}.update');
+        ${moduleTemplate} = $this->{moduleTemplate}Repository->get{ModuleTemplate}ById($id, 
         $this->language);
 
         $config = $this->configData();
-        $template = 'backend.post.catalogue.store';
+        $template = 'backend.{moduleView}.store';
         $dropdown = $this->nestedset->Dropdown();
-        $config['seo'] = __('messages.postCatalogue');
+        $config['seo'] = __('messages.{moduleTemplate}');
         $config['method'] = 'edit';
-        $album = json_decode($postCatalogue->album);
+        $album = json_decode(${moduleTemplate}->album);
         return view('backend.dashboard.layout', compact(
             'template',
             'config',
-            'postCatalogue',
+            '{moduleTemplate}',
             'dropdown',
             'album'
         ));
     }
 
-    public function update($id, UpdatePostCatalogueRequest $request)
+    public function update($id, Update{ModuleTemplate}Request $request)
     {
-        if($this->postCatalogueService->update($id, $request)){
+        if($this->{moduleTemplate}Service->update($id, $request)){
       
-            return redirect()->route('post.catalogue.index');
+            return redirect()->route('{moduleView}.index');
         }
         
-        return redirect()->route('post.catalogue.index');
+        return redirect()->route('{moduleView}.index');
     }
 
     public function delete($id)
     {
-        $this->authorize('modules', 'post.catalogue.destroy');
-        $config['seo'] = __('messages.postCatalogue');
-        $postCatalogue = $this->postCatalogueRepository->getPostCatalogueById($id, 
+        $this->authorize('modules', '{moduleView}.destroy');
+        $config['seo'] = __('messages.{moduleTemplate}');
+        ${moduleTemplate} = $this->{moduleTemplate}Repository->get{ModuleTemplate}ById($id, 
         $this->language);
-        $template = 'backend.post.catalogue.delete';
+        $template = 'backend.{moduleView}.delete';
         return view('backend.dashboard.layout', compact(
             'template',
-            'postCatalogue',
+            '{moduleTemplate}',
             'config'
             
         ));
     }
 
-    public function destroy($id, DeletePostCatalogueRequest $request) 
+    public function destroy($id, Delete{ModuleTemplate}Request $request) 
     {
-        if($this->postCatalogueService->destroy($id)){
-            return redirect()->route('post.catalogue.index');
+        if($this->{moduleTemplate}Service->destroy($id)){
+            return redirect()->route('{moduleView}.index');
         }
         
-        return redirect()->route('post.catalogue.index');
+        return redirect()->route('{moduleView}.index');
     }
 
     private function configData(){

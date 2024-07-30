@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 
-class PostCatalogue extends Model
+class {ModuleTemplate} extends Model
 {
     use HasFactory, SoftDeletes;
 
@@ -24,14 +24,14 @@ class PostCatalogue extends Model
         'follow',  
     ];
 
-    protected $table = 'post_catalogues';
+    protected $table = '{tableName}';
 
     public function languages()
     {
         return $this->belongsToMany(Language::class, 
-            'post_catalogue_language', 'post_catalogue_id', 'language_id')
+            '{pivotTable}', '{foreignKey}', 'language_id')
             ->withPivot(
-                'post_catalogue_id',
+                '{foreignKey}',
                 'language_id',
                 'name',
                 'canonical',
@@ -43,19 +43,19 @@ class PostCatalogue extends Model
             )->withTimestamps();
     }
 
-    public function posts(){
-        return $this->belongToMany(Post::class, 
-        'post_catalogue_post','post_catalogue_id', 'post_id');
+    public function {relation}s(){
+        return $this->belongToMany({relationModel}::class, 
+        '{relationPivot}','{foreignKey}', '{relation}_id');
     }
 
-    public function post_catalogue_language(){
-        return $this->hasMany(PostCatalogueLanguage::class, 'post_catalogue_id', 'id')->where('language_id','=',1);
+    public function {module}_language(){
+        return $this->hasMany({pivotModel}::class, '{foreignKey}', 'id');
     }
 
     public static function isNodeCheck($id = 0){
-        $postCatalogue = PostCatalogue::find($id);
+        ${relation}Catalogue = {ModuleTemplate}::find($id);
 
-        if($postCatalogue->rgt - $postCatalogue->lft !== 1){
+        if(${relation}Catalogue->rgt - ${relation}Catalogue->lft !== 1){
             return false;
         }
 
