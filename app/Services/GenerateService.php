@@ -56,9 +56,10 @@ class GenerateService extends BaseService implements GenerateServiceInterface
         try {
             // $database = $this->makeDatabase($request); -->done
             // $controller = $this->makeController($request); --> done
-            // $model = $this->makeModel($request);
-            // $repository = $this->makeRepository($request); -> done
-            $this->makeService();
+            // $model = $this->makeModel($request); --> done
+            $this->makeRepository($request); 
+
+            // $this->makeService($request);
             // $this->makeProvider();
             // $this->makeRequest();
             // $this->makeView();
@@ -280,33 +281,30 @@ MIGRATION;
             $name = $request->input('name');
             $module = $this->converModelNameToTableName($name);
             $moduleExtract = explode('_', $module);
-            $option = [
-                'repositoryName' => $name.'Repository',
-                'repositoryInterfaceName' => $name.'RepositoryInterface',
-            ];
-            $repositoryInterface = base_path('app/Templates/TemplateRepositoryInterface.php');
-            $repositoryInterfaceContent = file_get_contents($repositoryInterface);
+            $repository = $this->initializeServiceLayer('Repository', 'Repositories', $request);
             $replace = [
                 'Module' => $name,
             ];
-            $repositoryInterfaceContent = str_replace('{Module}', $replace['Module'], $repositoryInterfaceContent);
-            $repositoryInterfacePath = base_path('app/Repositories/Interfaces/'.$option['repositoryInterfaceName'].'.php');
+            $repositoryInterfaceContent = $repository['interface']['layerInterfaceContent'];
+            $repositoryInterfaceContent = str_replace('{Module}', $replace['Module'], 
+            $repositoryInterfaceContent);
+
             
-    
-            $repository = base_path('app/Templates/TemplateRepository.php');
-            $repositoryContent = file_get_contents($repository);
             $replaceRepository = [
                 'Module' => $name,
                 'tableName' => $module.'s',
                 'pivotTableName' => $module.'_'.$moduleExtract[0],
                 'foreignKey' => $module.'_id',
             ];
-            $repositoryPath = base_path('app/Repositories/'.$option['repositoryName'].'.php');
+
+            $repositoryContent = $repository['service']['layerContent'];
             foreach ($replaceRepository as $key => $val) {
                 $repositoryContent = str_replace('{'.$key.'}', $replaceRepository[$key], $repositoryContent);
             }
-            File::put($repositoryInterfacePath, $repositoryInterfaceContent);
-            File::put($repositoryPath, $repositoryContent);
+            File::put($repository['interface']['layerInterfacePath'], $repositoryInterfaceContent);
+            File::put($repository['service']['layerPathPut'], $repositoryContent);
+
+            die();
             return true;
         }catch (\Exception $e) {
             DB::rollback();
@@ -314,6 +312,49 @@ MIGRATION;
             return false;
         }
     }
+
+    private function makeService($request)
+    {
+        try {
+            // $this->initializeServiceLayer($request);
+            return true;
+        }catch (\Exception $e) {
+            DB::rollback();
+            // echo $e->getMessage();die();
+            return false;
+        }
+    }
+
+    private function initializeServiceLayer($layer = '', $folder = '', $request)
+    {
+        $name = $request->input('name');
+        $option = [
+            $layer.'Name' => $name.$layer,
+            $layer.'InterfaceName' => $name.$layer.'Interface',
+        ];
+        $layerInterfaceRead = base_path('app/Templates/Template'.$layer.'Interface.php');
+        $layerInterfaceContent = file_get_contents($layerInterfaceRead);
+        $layerInterfacePath = base_path('app/'.$folder.'/Interfaces/'.$option[$layer.'InterfaceName'].'.php');
+        
+        $layerPathRead = base_path('app/Templates/Template'.$layer.'.php');
+        $layerContent = file_get_contents($layerPathRead);
+        $layerPathPut = base_path('app/'.$folder.'/'.$option[$layer.'Name'].'.php');
+        
+        return [
+            'interface' => [
+                'layerInterfaceContent' => $layerInterfaceContent,
+                'layerInterfacePath' => $layerInterfacePath,
+            ],
+            'service' => [
+                'layerContent' => $layerContent,
+                'layerPathPut' => $layerPathPut,
+            ],
+            
+        ];
+            
+    }
+
+    
 
     public function update($id, $request) {
         DB::beginTransaction();
